@@ -65,20 +65,27 @@ class AuthController extends Controller
         Session::put('error', 'Unauthorized role.');
         return back()->withErrors(['error' => 'Invalid credentials.']);
     }
+    public function AllStudent(Request $request)
+    {
+        $response = Http::get($this->baseUrl . 'api/Admin/AllStudent');
+        if ($response->successful()) {
+            $data = $response->json(); // Decode JSON
+            $students = $data['Student'] ?? []; 
+        } else {
+            $students = [];
+        }
+        return redirect()->route('datacell.student')->with('students', $students);
+    }
     public function AllCourse(Request $request)
     {
         $response = Http::get($this->baseUrl . 'api/Admin/courses');
-        
         if ($response->successful()) {
             $data = $response->json(); // Decode JSON
             $courses = $data['Courses'] ?? []; 
         } else {
             $courses = [];
         }
-        
         return redirect()->route('datacell.courses')->with('courses', $courses);
-        // return view('allcourses', compact('courses'));
-        // return view('allcourses', ['courses' => $courses]);
     }
     public function handletimetable(Request $request){
 

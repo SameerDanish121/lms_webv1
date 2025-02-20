@@ -8,7 +8,7 @@
 
 
     <div class="hidden md:flex space-x-10 ml-auto mr-5">
-        <a href="#" class="nav-item">Home</a>
+        <a href="{{route('datacell.dashboard')}}" class="nav-item">Home</a>
         <a href="#" class="nav-item">Courses</a>
         <a href="#" class="nav-item">Teachers</a>
         <a href="#" class="nav-item">Enrollments</a>
