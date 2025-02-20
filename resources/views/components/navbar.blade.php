@@ -3,7 +3,6 @@
     <div class="flex items-center space-x-3">
         <button onclick="toggleMenu()" class="text-blue-500 text-2xl md:hidden">&#9776;</button>
         <div class="font-bold text-blue-600 text-xl lg:text-4xl">LMS</div>
-
     </div>
 
 
@@ -22,7 +21,7 @@
         class="w-11 h-10 rounded-full border border-gray-300">
         <div class="flex flex-col">
             <span class="text-gray-600 font-semibold">{{ $username }}</span>
-                <span class="text-sm text-gray-400">{{$designation?:'N/A'}}</span>
+                <span class="text-sm text-gray-400">{{$designation??'N/A'}}</span>
         </div>
     </div>
 

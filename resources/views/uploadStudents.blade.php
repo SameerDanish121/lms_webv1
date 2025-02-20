@@ -16,7 +16,12 @@
     </style>
 </head>
 <body class="bg-gradient-to-r from-blue-300 via-blue-200 to-blue-100 min-h-screen p-0 m-0">
-    @include('components.navbar', ['username' => ' M Sharjeel', 'profileImage' => 'images/2021-ARID-4583.png', 'a'=>'dc'])
+    @include('components.navbar', [
+        'username' => session('username', 'Guest'),
+        'profileImage' => session('profileImage', asset('images/male.png')),
+        'designation' => session('designation', 'N/A'),
+        'type' => session('type', 'User')
+    ])
 
     <div class="max-w-4xl mx-auto bg-white shadow-md rounded-lg p-6 mt-6 text-center">
         <h2 class="text-2xl font-bold text-gray-700 mb-4">Upload Student Enrollment File</h2>

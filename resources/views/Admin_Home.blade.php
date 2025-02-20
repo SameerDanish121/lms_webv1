@@ -66,7 +66,12 @@ $designation = $userData['AdminInfo']['Designation'] ?? 'Unknown Role';
 $type=$userData['Type']??"Datacell";
 @endphp
 <body class="bg-gradient-to-r from-blue-300 via-blue-200 to-blue-100 min-h-screen p-0 m-0">
-    @include('components.navbar', ['username' => $userName, 'profileImage' => $profileImage,'designation'=>$designation, 'type'=>$type ])
+    @include('components.navbar', [
+        'username' => session('username', 'Guest'),
+        'profileImage' => session('profileImage', asset('images/male.png')),
+        'designation' => session('designation', 'N/A'),
+        'type' => session('type', 'User')
+    ])
     
     <div class="max-w-6xl mx-auto mb-1 mt-6 p-6 rounded-2xl shadow-lg text-center fade-in backdrop-blur-lg border border-white/10" style="background: linear-gradient(to bottom right, rgba(0, 198, 255, 0.8), rgba(0, 114, 255, 0.8), rgba(30, 61, 143, 0.8));">
         <img src="{{ $profileImage ? $profileImage : asset('images/male.png') }}" alt="" class="mx-auto rounded-full border-4 border-white shadow-lg w-24 h-24 object-cover">

@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -37,11 +38,20 @@
 </head>
 <body class="bg-gray-100">
 
-    @include('components.navbar', ['username' => 'Sharjeel', 'profileImage' => 'images/2021-ARID-4583.png','a'=>'dp'])
+    @include('components.navbar', [
+        'username' => session('username', 'Guest'),
+        'profileImage' => session('profileImage', asset('images/male.png')),
+        'designation' => session('designation', 'N/A'),
+        'type' => session('type', 'User')
+    ])
 
     <!-- Course List -->
     <div class="container mx-auto px-4 py-6">
         <h2 class="text-2xl sm:text-3xl font-bold text-blue-700 text-center mb-4">Course List</h2>
+
+        @if(Session::has('error'))
+            <div class="text-red-600 text-center mb-4">{{ Session::get('error') }}</div>
+        @endif
 
         <div class="table-container mx-auto">
             <table class="border border-gray-300 shadow-lg bg-white">
@@ -55,35 +65,21 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @php
-                       $courses = [
-    ['id' => 1, 'name' => 'Introduction to Computer Science', 'code' => 'CS101', 'prereq' => 'None', 'credit' => '3 (2-1)'],
-    ['id' => 2, 'name' => 'Programming Fundamentals', 'code' => 'CS102', 'prereq' => 'CS101', 'credit' => '3 (2-1)'],
-    ['id' => 3, 'name' => 'Object-Oriented Programming', 'code' => 'CS103', 'prereq' => 'CS102', 'credit' => '4 (3-1)'],
-    ['id' => 4, 'name' => 'Data Structures', 'code' => 'CS104', 'prereq' => 'CS103', 'credit' => '3 (2-1)'],
-    ['id' => 5, 'name' => 'Database Systems', 'code' => 'CS105', 'prereq' => 'CS104', 'credit' => '3 (2-1)'],
-    ['id' => 6, 'name' => 'Computer Architecture', 'code' => 'CS106', 'prereq' => 'CS104', 'credit' => '3 (2-1)'],
-    ['id' => 7, 'name' => 'Operating Systems', 'code' => 'CS107', 'prereq' => 'CS106', 'credit' => '3 (2-1)'],
-    ['id' => 8, 'name' => 'Software Engineering', 'code' => 'CS108', 'prereq' => 'CS104', 'credit' => '3 (2-1)'],
-    ['id' => 9, 'name' => 'Computer Networks', 'code' => 'CS109', 'prereq' => 'CS107', 'credit' => '3 (2-1)'],
-    ['id' => 10, 'name' => 'Web Development', 'code' => 'CS110', 'prereq' => 'CS102', 'credit' => '3 (2-1)'],
-    ['id' => 11, 'name' => 'Artificial Intelligence', 'code' => 'AI201', 'prereq' => 'CS109', 'credit' => '3 (2-1)'],
-    ['id' => 12, 'name' => 'Machine Learning', 'code' => 'AI202', 'prereq' => 'AI201', 'credit' => '3 (2-1)'],
-
-    ['id' => 30, 'name' => 'Quantum Computing', 'code' => 'CS120', 'prereq' => 'CS118', 'credit' => '3 (2-1)'],
-];
-
-                    @endphp
-
-                    @foreach ($courses as $course)
-                        <tr class="border-b border-gray-300">
-                            <td class="px-4 py-2">{{ $course['id'] }}</td>
-                            <td class="px-4 py-2">{{ $course['name'] }}</td>
-                            <td class="px-4 py-2">{{ $course['code'] }}</td>
-                            <td class="px-4 py-2">{{ $course['prereq'] }}</td>
-                            <td class="px-4 py-2">{{ $course['credit'] }}</td>
+                    @if (!empty($courses))
+                        @foreach ($courses as $course)
+                            <tr class="border-b border-gray-300">
+                                <td class="px-4 py-2">{{ $course['id'] }}</td>
+                                <td class="px-4 py-2">{{ $course['name'] }}</td>
+                                <td class="px-4 py-2">{{ $course['code'] }}</td>
+                                <td class="px-4 py-2">{{ $course['pre_req_main'] }}</td>
+                                <td class="px-4 py-2">{{ $course['credit_hours'] }} ({{ $course['lab'] == 1 ? 'Lab' : 'No Lab' }})</td>
+                            </tr>
+                        @endforeach
+                    @else
+                        <tr>
+                            <td colspan="5" class="text-center py-4 text-gray-500">No courses available.</td>
                         </tr>
-                    @endforeach
+                    @endif
                 </tbody>
             </table>
         </div>

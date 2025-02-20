@@ -66,7 +66,12 @@ $designation = $userData['DatacellInfo']['Designation'] ?? 'Unknown Role';
 $type=$userData['Type']??"Datacell";
 @endphp
 <body class="bg-gradient-to-r from-blue-300 via-blue-200 to-blue-100 min-h-screen p-0 m-0">
-    @include('components.navbar', ['username' => $userName, 'profileImage' => $profileImage,'designation'=>$designation, 'type'=>$type ])
+    @include('components.navbar', [
+        'username' => session('username', 'Guest'),
+        'profileImage' => session('profileImage', asset('images/male.png')),
+        'designation' => session('designation', 'N/A'),
+        'type' => session('type', 'User')
+    ])
     
     <div class="max-w-6xl mx-auto mb-1 mt-6 p-6 rounded-2xl shadow-lg text-center fade-in backdrop-blur-lg border border-white/10" style="background: linear-gradient(to bottom right, rgba(0, 198, 255, 0.8), rgba(0, 114, 255, 0.8), rgba(30, 61, 143, 0.8));">
         <img src="{{ $profileImage ? $profileImage : asset('images/male.png') }}" alt="" class="mx-auto rounded-full border-4 border-white shadow-lg w-24 h-24 object-cover">
@@ -95,7 +100,7 @@ $type=$userData['Type']??"Datacell";
            <button id="prevBtn" class="bg-white p-3 md:p-4 rounded-lg shadow-md text-center btn-hover mr-2 md:mr-5">⬅️</button>
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 flex-1" id="cardContainer">
                 <!-- Button 1 -->
-                <a href="" class="btn-card bg-white p-6 rounded-xl shadow-md text-center hover:scale-105 transition-transform">
+                <a href="{{route('show.timetable')}}" class="btn-card bg-white p-6 rounded-xl shadow-md text-center hover:scale-105 transition-transform">
                     <span class="text-4xl">📑</span>
                     <p class="mt-2 font-bold text-xs md:text-sm">Upload Timetable</p>
                 </a>
@@ -105,7 +110,7 @@ $type=$userData['Type']??"Datacell";
                     <p class="mt-2 font-bold text-xs md:text-sm">Add Students</p>
                 </a>
                 <!-- Button 3 -->
-                <a href="" class="btn-card bg-white p-6 rounded-xl shadow-md text-center hover:scale-105 transition-transform">
+                <a href="{{ route('allcourses') }}" class="btn-card bg-white p-6 rounded-xl shadow-md text-center hover:scale-105 transition-transform">
                     <span class="text-4xl">📚</span>
                     <p class="mt-2 font-bold text-xs md:text-sm">All Courses</p>
                 </a>
