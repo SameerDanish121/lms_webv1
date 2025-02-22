@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Services\ApiConfig;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Session;
@@ -9,7 +10,8 @@ class AuthController extends Controller
     protected $baseUrl;
     public function __construct()
     {
-        $this->baseUrl = 'http://127.0.0.1:8000/'; 
+        ApiConfig::init();
+        $this->baseUrl = ApiConfig::getApiBaseUrl(); 
     }
 
     public function login()

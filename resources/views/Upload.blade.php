@@ -98,6 +98,20 @@
     </footer>
 </body>
 <script>
+        let API_BASE_URL = "http://127.0.0.1:8000/";
+        async function getApiBaseUrl() {
+            try {
+                let response = await fetch('/get-api-url');
+                let data = await response.json();
+                return data.api_base_url;
+            } catch (error) {
+                return API_BASE_URL;
+            }
+        }
+        async function initializeApiBaseUrl() {
+            API_BASE_URL = await getApiBaseUrl();
+        }
+        initializeApiBaseUrl();
     document.getElementById("timetableUpload").addEventListener("change", function() {
         let file = this.files[0];
         let fileNameDisplay = document.getElementById("fileNameDisplay");
@@ -146,9 +160,10 @@
                 let submitButton = document.getElementById("submitButton");
                 submitButton.disabled = true;
                 submitButton.textContent = "Uploading...";
-
+                
                 try {
-                    let response = await fetch("http://127.0.0.1:8000/api/Uploading/uplaod/timetable", {
+                    initializeApiBaseUrl();
+                    let response = await fetch(`${API_BASE_URL}api/Uploading/uplaod/timetable`, {
                         method: "POST"
                         , body: formData
                     , });

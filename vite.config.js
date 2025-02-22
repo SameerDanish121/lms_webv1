@@ -21,7 +21,12 @@ export default defineConfig({
             input: ['resources/css/app.css', 'resources/js/app.js'],
             refresh: true,
         }),
-    ],
+    ],server: {
+        host: '192.168.0.108', // Your local IP
+        port: 5173, // Default Vite port
+        strictPort: true,
+        hmr: false,
+    },
     css: {
         postcss: {
           plugins: [tailwindcss()],

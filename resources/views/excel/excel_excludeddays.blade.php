@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LMS - Teacher</title>
+    <title>LMS - Exclude Days</title>
     @vite('resources/css/app.css')
     <style>
         @keyframes fadeIn {
@@ -63,7 +63,7 @@
 
 
     <div class="max-w-4xl mx-auto bg-white shadow-md rounded-lg p-6 mt-6 text-center">
-        <h2 class="text-2xl font-bold text-gray-700 mb-4">Upload Junior Lecturer Data</h2>
+        <h2 class="text-2xl font-bold text-gray-700 mb-4">Upload Exclude Days Data</h2>
         <br>
         <div class="flex justify-center space-x-4 ">
 
@@ -137,20 +137,19 @@
 
                 try {
                     initializeApiBaseUrl();
-                    let response = await fetch(`${API_BASE_URL}api/Uploading/excel-upload/upload-junior-lecturers`, {
+                    let response = await fetch(`${API_BASE_URL}api/Uploading/excel-upload/excluded_days`, {
                         method: "POST"
                         , body: formData
                     , });
 
                     let result = await response.json();
-
                     if (response.status === 200) {
                            
-                            renderTimetable(result);
-                            showAlert(result['Message'], 'success');
+                            renderTimetable(result.data);
+                            showAlert(`Upload Successful ${result.message}!\nSuccessfully Added Records Count: ${result.data["Total Inserted/Updated"]}\nFaulty Records Count: ${result.data["Total Errors"]}`, 'success');
                         }
                         else {
-                            showAlert('Upload Failed: Not Uploaded ');
+                            showAlert(`Upload Failed: Not Uploaded }`);
                         }
                     } catch (error) {
                         showAlert("An error occurred while uploading.");
@@ -213,8 +212,8 @@
                 }, 10000);
             }
             function renderTimetable(response) {
-        let success = response['success']; // Typo in API response (should be "Success")
-        let error = response['failed'];
+        let success = response['Succesfull']; // Typo in API response (should be "Success")
+        let error = response['FaultyData'];
         const container = document.getElementById("timetableContainer");
 
         const successTable = `
@@ -224,19 +223,15 @@
                     <table class="w-full border-collapse border border-gray-300 text-gray-700">
                         <thead>
                             <tr class="bg-green-500 text-white">
-                                <th class="border border-gray-300 p-2">status</th>
-                                <th class="border border-gray-300 p-2">Logs</th>
-                                <th class="border border-gray-300 p-2">Username</th>
-                                 <th class="border border-gray-300 p-2">Password</th>
+                                <th class="border border-gray-300 p-2">Status</th>
+                                <th class="border border-gray-300 p-2">Data</th>
                             </tr>
                         </thead>
                         <tbody>
                             ${success.map(record => `
                                 <tr class="bg-green-100">
                                     <td class="border p-2 text-center">${record.status}</td>
-                                    <td class="border p-2 text-center">${record.Logs}</td>
-                                    <td class="border p-2 text-center">${record.username}</td>
-                                    <td class="border p-2 text-center">${record.password}</td>
+                                    <td class="border p-2 text-center">${record.data}</td>
                                 </tr>
                             `).join('')}
                         </tbody>
@@ -260,7 +255,7 @@
                             ${error.map(record => `
                                 <tr class="bg-red-100">
                                     <td class="border p-2 text-center">${record.status}</td>
-                                    <td class="border p-2 text-center">${record.reason??record.Record}</td>
+                                    <td class="border p-2 text-center">${record.Issue??record.Record}</td>
                                 </tr>
                             `).join('')}
                         </tbody>

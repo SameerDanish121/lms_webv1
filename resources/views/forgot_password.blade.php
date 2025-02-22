@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Forgot Password - LMS</title>
+
     @vite('resources/css/app.css')
 
     <style>
@@ -83,8 +84,6 @@
             display: none;
         }
 
-        
-
     </style>
 </head>
 
@@ -92,7 +91,7 @@
     <h1 class="text-4xl font-bold mb-6 text-center text-[#024CAA]">
         <span class="text-black">Reset Your</span> <span class="text-5xl">Password</span>
     </h1>
-    
+
     <div class="glass text-white flex flex-col items-center">
         <div class="progress-container">
             <div class="progress-line" id="progress-line"></div>
@@ -131,7 +130,20 @@
 
 
     <script>
-        const API_BASE_URL = "http://127.0.0.1:8000";
+        let API_BASE_URL = "http://127.0.0.1:8000/";
+        async function getApiBaseUrl() {
+            try {
+                let response = await fetch('/get-api-url');
+                let data = await response.json();
+                return data.api_base_url;
+            } catch (error) {
+                return API_BASE_URL;
+            }
+        }
+        async function initializeApiBaseUrl() {
+            API_BASE_URL = await getApiBaseUrl();
+        }
+       
 
         function nextStep(step) {
             document.getElementById(`step${step}-content`).classList.add('hidden');
@@ -155,8 +167,8 @@
                 alert("Please enter your email!");
                 return;
             }
-
-            fetch(`${API_BASE_URL}/api/forgot-password`, {
+            initializeApiBaseUrl();
+            fetch(`${API_BASE_URL}api/forgot-password`, {
                     method: "POST"
                     , headers: {
                         "Content-Type": "application/json"
@@ -173,7 +185,7 @@
                         // Store user_id for later
                         nextStep(1);
                     } else {
-                       
+
                         alert("Email doesn't exist. Please try again.");
                     }
                 })
@@ -190,8 +202,8 @@
                 alert("Please enter the OTP!");
                 return;
             }
-
-            fetch(`${API_BASE_URL}/api/verify-otp`, {
+            initializeApiBaseUrl();
+            fetch(`${API_BASE_URL}api/verify-otp`, {
                     method: "POST"
                     , headers: {
                         "Content-Type": "application/json"
@@ -228,8 +240,8 @@
                 alert("Passwords do not match!");
                 return;
             }
-
-            fetch(`${API_BASE_URL}/api/update-pass`, {
+            initializeApiBaseUrl();
+            fetch(`${API_BASE_URL}api/update-pass`, {
                     method: "POST"
                     , headers: {
                         "Content-Type": "application/json"
@@ -248,6 +260,7 @@
                 })
                 .catch(error => console.error("Error:", error));
         }
+
     </script>
 
 </body>
