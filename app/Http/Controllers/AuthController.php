@@ -42,7 +42,7 @@ class AuthController extends Controller
                     'currentSession' => $data['AdminInfo']['Current Session'],
                     'startDate' => $data['AdminInfo']['Start Date'],
                     'endDate' => $data['AdminInfo']['End Date'],
-                    'profileImage' => $data['AdminInfo']['image'] ?? asset('images/man.png'),
+                    'profileImage' => $data['AdminInfo']['image'] ?? asset('images/male.png'),
                 ]);
                 return redirect()->route('admin.dashboard')->with('userData', $data);
             } elseif ($data['Type'] == 'Datacell') {
@@ -56,7 +56,7 @@ class AuthController extends Controller
                     'currentSession' => $data['DatacellInfo']['Current Session'],
                     'startDate' => $data['DatacellInfo']['Start Date'],
                     'endDate' => $data['DatacellInfo']['End Date'],
-                    'profileImage' => $data['DatacellInfo']['image'] ?? asset('images/man.png'),
+                    'profileImage' => $data['DatacellInfo']['image'] ?? asset('images/male.png'),
                 ]);
                 return redirect()->route('datacell.dashboard')->with('userData', $data);
             } else {
@@ -88,6 +88,17 @@ class AuthController extends Controller
             $courses = [];
         }
         return redirect()->route('datacell.courses')->with('courses', $courses);
+    }
+    public function FullTimetable(Request $request)
+    {
+        $response = Http::post($this->baseUrl . 'api/Uploading/timetable/section');
+        if ($response->successful()) {
+            $data = $response->json(); // Decode JSON
+            $timetable = $data['timetable'] ?? []; 
+        } else {
+            $courses = [];
+        }
+        return redirect()->route('full')->with('timetable', $timetable);
     }
     public function handletimetable(Request $request){
 

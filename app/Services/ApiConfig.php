@@ -5,7 +5,6 @@ use Illuminate\Support\Facades\Cache;
 
 class ApiConfig
 {
-
     public static $apiBaseUrl; // Static variable
 
     // Initialize the static property from cache
@@ -15,7 +14,6 @@ class ApiConfig
             self::$apiBaseUrl = Cache::get('api_base_url', 'http://127.0.0.1:8000/'); 
         }
     }
-
     public static function setApiBaseUrl($url)
     {
         self::$apiBaseUrl = $url;

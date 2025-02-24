@@ -31,6 +31,9 @@
         @media (max-width: 768px) { .table-container { width: 100%; overflow-x: auto; } table { width: 100%; font-size: 14px; min-width: 800px; } th, td { padding: 8px; } }
     </style>
 </head>
+@php
+$profileImage= asset('images/male.png');
+@endphp
 <body class="bg-gray-100">
     @include('components.navbar', [
         'username' => session('username', 'Guest'),
@@ -112,7 +115,7 @@
                         @foreach ($students as $student)
                             <tr class="border-b border-gray-300 text-center">
                                 <td class="px-4 py-2">
-                                    <img src="{{ $student['image'] ?? asset('images/default-profile.png') }}" alt="Profile" class="w-12 h-12 rounded-full mx-auto">
+                                    <img src="{{ !empty($student['image'] ) ? $student['image']  : asset('images/male.png')}}" alt="Profile" class="w-12 h-12 rounded-full mx-auto">
                                 </td>
                                 <td class="px-4 py-2">{{ $student['RegNo'] }}</td>
                                 <td class="px-4 py-2">{{ $student['name'] }}</td>
@@ -123,7 +126,12 @@
                                 <td class="px-4 py-2">{{ $student['program']['name'] }}</td>
                                 <td class="px-4 py-2">{{ $student['session']['name'] }}-{{ $student['session']['year'] }}</td>
                                 <td class="px-4 py-2">
-                                    <a href="{{ url('/student/details/' . (int) $student['id']) }}" class="bg-blue-500 text-white px-4 py-2 rounded">View</a>
+                                    <a href="{{ route('student.details', ['student' => base64_encode(json_encode($student))]) }}" 
+                                        class="bg-blue-500 text-white px-4 py-2 rounded">
+                                         View
+                                     </a>
+                                     
+                                    {{-- <a href="{{ route('student.details', ['student' => base64_encode(json_encode($student))]) }}" class="bg-blue-500 text-white px-4 py-2 rounded">View</a> --}}
                                 </td>
                             </tr>
                         @endforeach

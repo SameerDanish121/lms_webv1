@@ -127,7 +127,26 @@
             </button>
         </div>
     </div>
+    <script>
+        window.addEventListener("load", function() {
+            document.getElementById("loader").classList.add("hidden");
+        });
 
+        function showLoader() {
+            document.getElementById("loader").classList.remove("hidden");
+        }
+
+        function hideLoader() {
+            document.getElementById("loader").classList.add("hidden");
+        }
+
+    </script>
+
+    <div id="loader" class="hidden fixed top-0 left-0 w-full h-full flex justify-center items-center bg-white bg-opacity-50">
+        <div class="w-20 h-20 border-4 border-transparent text-blue-400 text-4xl animate-spin flex items-center justify-center border-t-blue-400 rounded-full">
+            <div class="w-16 h-16 border-4 border-transparent text-red-400 text-2xl animate-spin flex items-center justify-center border-t-red-400 rounded-full"></div>
+        </div>
+    </div>
 
     <script>
         let API_BASE_URL = "http://127.0.0.1:8000/";
@@ -143,7 +162,7 @@
         async function initializeApiBaseUrl() {
             API_BASE_URL = await getApiBaseUrl();
         }
-       
+
 
         function nextStep(step) {
             document.getElementById(`step${step}-content`).classList.add('hidden');
@@ -162,8 +181,10 @@
 
         // Send OTP API
         function sendOTP() {
+            showLoader();
             let email = document.getElementById("email").value.trim();
             if (!email) {
+                hideLoader();
                 alert("Please enter your email!");
                 return;
             }
@@ -180,25 +201,30 @@
                 .then(response => response.json())
                 .then(data => {
                     if (data.status === "success") {
+                        hideLoader();
                         alert(data.message);
                         localStorage.setItem("user_id", data.user_id);
                         // Store user_id for later
                         nextStep(1);
                     } else {
-
+                        hideLoader();
                         alert("Email doesn't exist. Please try again.");
                     }
                 })
-                .catch(error => console.error("Error:", error));
+                .catch(error => console.error("Error:", error)).finally(() => {
+                    hideLoader();
+                });
+            
         }
 
         // Verify OTP API
         function verifyOTP() {
+            showLoader();
             let otp = document.getElementById("code").value.trim();
             let user_id = localStorage.getItem("user_id");
 
             if (!otp) {
-
+                hideLoader();
                 alert("Please enter the OTP!");
                 return;
             }
@@ -216,27 +242,34 @@
                 .then(response => response.json())
                 .then(data => {
                     if (data.status === "success") {
+                        hideLoader();
                         alert(data.message);
                         nextStep(2);
                     } else {
+                        hideLoader();
                         alert("Invalid OTP. Please try again.");
                     }
                 })
-                .catch(error => console.error("Error:", error));
+                .catch(error => console.error("Error:", error)).finally(() => {
+                    hideLoader();
+                });
         }
 
         // Update Password API
         function updatePassword() {
+            showLoader();
             let newPassword = document.getElementById("password").value.trim();
             let confirmPassword = document.getElementById("confirm-password").value.trim();
             let user_id = localStorage.getItem("user_id");
 
             if (!newPassword || !confirmPassword) {
+                hideLoader();
                 alert("Please fill in both password fields!");
                 return;
             }
 
             if (newPassword !== confirmPassword) {
+                hideLoader();
                 alert("Passwords do not match!");
                 return;
             }
@@ -253,12 +286,14 @@
                 })
                 .then(response => response.json())
                 .then(data => {
-
+                    hideLoader();
                     alert(data.message);
                     localStorage.removeItem("user_id"); // Clear stored user_id
                     window.location.href = "{{ route('login') }}"; // Redirect to login
                 })
-                .catch(error => console.error("Error:", error));
+                .catch(error => console.error("Error:", error)).finally(() => {
+                    hideLoader();
+                });
         }
 
     </script>

@@ -55,13 +55,11 @@
 
 <body class="bg-gradient-to-r from-blue-300 via-blue-200 to-blue-100 min-h-screen p-0 m-0">
     @include('components.navbar', [
-        'username' => session('username', 'Guest'),
-        'profileImage' => session('profileImage', asset('images/male.png')),
-        'designation' => session('designation', 'N/A'),
-        'type' => session('type', 'User')
+    'username' => session('username', 'Guest'),
+    'profileImage' => session('profileImage', asset('images/male.png')),
+    'designation' => session('designation', 'N/A'),
+    'type' => session('type', 'User')
     ])
-
-
     <div class="max-w-4xl mx-auto bg-white shadow-md rounded-lg p-6 mt-6 text-center">
         <h2 class="text-2xl font-bold text-gray-700 mb-4">Upload Timetable</h2>
         <div class="flex justify-center space-x-4 ">
@@ -88,7 +86,26 @@
     </div>
 
 
+    <script>
+        window.addEventListener("load", function() {
+            document.getElementById("loader").classList.add("hidden");
+        });
 
+        function showLoader() {
+            document.getElementById("loader").classList.remove("hidden");
+        }
+
+        function hideLoader() {
+            document.getElementById("loader").classList.add("hidden");
+        }
+
+    </script>
+
+    <div id="loader" class="hidden fixed top-0 left-0 w-full h-full flex justify-center items-center bg-white bg-opacity-50">
+        <div class="w-20 h-20 border-4 border-transparent text-blue-400 text-4xl animate-spin flex items-center justify-center border-t-blue-400 rounded-full">
+            <div class="w-16 h-16 border-4 border-transparent text-red-400 text-2xl animate-spin flex items-center justify-center border-t-red-400 rounded-full"></div>
+        </div>
+    </div>
 
     <div id="timetableContainer"></div>
     <footer class="bg-blue-600 p-2 mt-20 shadow-md text-center">
@@ -98,20 +115,27 @@
     </footer>
 </body>
 <script>
-        let API_BASE_URL = "http://127.0.0.1:8000/";
-        async function getApiBaseUrl() {
-            try {
-                let response = await fetch('/get-api-url');
-                let data = await response.json();
-                return data.api_base_url;
-            } catch (error) {
-                return API_BASE_URL;
-            }
+    function showLoader() {
+        document.getElementById("loader").classList.remove("hidden");
+    }
+
+    function hideLoader() {
+        document.getElementById("loader").classList.add("hidden");
+    }
+    let API_BASE_URL = "http://127.0.0.1:8000/";
+    async function getApiBaseUrl() {
+        try {
+            let response = await fetch('/get-api-url');
+            let data = await response.json();
+            return data.api_base_url;
+        } catch (error) {
+            return API_BASE_URL;
         }
-        async function initializeApiBaseUrl() {
-            API_BASE_URL = await getApiBaseUrl();
-        }
-        initializeApiBaseUrl();
+    }
+    async function initializeApiBaseUrl() {
+        API_BASE_URL = await getApiBaseUrl();
+    }
+    initializeApiBaseUrl();
     document.getElementById("timetableUpload").addEventListener("change", function() {
         let file = this.files[0];
         let fileNameDisplay = document.getElementById("fileNameDisplay");
@@ -144,69 +168,72 @@
     });
 
     document.getElementById("submitButton").addEventListener("click", async function() {
-                let fileInput = document.getElementById("timetableUpload");
-                let session = document.getElementById("sessionDropdown").value;
-                let file = fileInput.files[0];
+        showLoader();
+        let fileInput = document.getElementById("timetableUpload");
+        let session = document.getElementById("sessionDropdown").value;
+        let file = fileInput.files[0];
 
-                if (!file) {
-                    showAlert("Please select a file before submitting.");
-                    return;
-                }
+        if (!file) {
+            hideLoader();
+            showAlert("Please select a file before submitting.");
+            return;
+        }
 
-                let formData = new FormData();
-                formData.append("excel_file", file);
-                formData.append("session", session);
+        let formData = new FormData();
+        formData.append("excel_file", file);
+        formData.append("session", session);
 
-                let submitButton = document.getElementById("submitButton");
-                submitButton.disabled = true;
-                submitButton.textContent = "Uploading...";
-                
-                try {
-                    initializeApiBaseUrl();
-                    let response = await fetch(`${API_BASE_URL}api/Uploading/uplaod/timetable`, {
-                        method: "POST"
-                        , body: formData
-                    , });
+        let submitButton = document.getElementById("submitButton");
+        submitButton.disabled = true;
+        submitButton.textContent = "Uploading...";
 
-                    let result = await response.json();
+        try {
+            initializeApiBaseUrl();
+            let response = await fetch(`${API_BASE_URL}api/Uploading/uplaod/timetable`, {
+                method: "POST"
+                , body: formData
+            , });
 
-                    if (response.status === 200) {
-                           
-                            renderTimetable(result);
-                            showAlert(`Upload Successful!\nSuccessfully Added Records Count: ${result.data["Successfully Added Records Count :"]}\nFaulty Records Count: ${result.data["Faulty Records Count :"]}`, 'success');
-                        }
-                        else {
-                            showAlert('Upload Failed: Not Uploaded ');
-                        }
-                    } catch (error) {
-                        showAlert("An error occurred while uploading.");
-                    } finally {
-                        submitButton.disabled = false;
-                        submitButton.textContent = "Submit";
-                    }
-                });
+            let result = await response.json();
 
-            function showAlert(message, type = "error") {
-                // Remove existing alert if present
-                const existingAlert = document.getElementById("custom-alert");
-                if (existingAlert) existingAlert.remove();
+            if (response.status === 200) {
+                hideLoader();
+                renderTimetable(result);
+                showAlert(`Upload Successful!\nSuccessfully Added Records Count: ${result.data["Successfully Added Records Count :"]}\nFaulty Records Count: ${result.data["Faulty Records Count :"]}`, 'success');
+            } else {
+                hideLoader();
+                showAlert('Upload Failed: Not Uploaded ');
+            }
+        } catch (error) {
+            hideLoader();
+            showAlert("An error occurred while uploading.");
+        } finally {
+            submitButton.disabled = false;
+            submitButton.textContent = "Submit";
+        }
+    });
 
-                // Define alert colors based on type
-                const colors = {
-                    success: "bg-green-600"
-                    , error: "bg-red-600"
-                    , warning: "bg-yellow-600"
-                    , info: "bg-blue-600"
-                , };
+    function showAlert(message, type = "error") {
+        // Remove existing alert if present
+        const existingAlert = document.getElementById("custom-alert");
+        if (existingAlert) existingAlert.remove();
 
-                // Create alert div
-                const alertDiv = document.createElement("div");
-                alertDiv.id = "custom-alert";
-                alertDiv.className = `${colors[type]} text-white fixed top-24 right-5 px-6 py-4 rounded-lg shadow-lg flex items-center space-x-3 animate-slide-in transition-all duration-300 z-50`;
+        // Define alert colors based on type
+        const colors = {
+            success: "bg-green-600"
+            , error: "bg-red-600"
+            , warning: "bg-yellow-600"
+            , info: "bg-blue-600"
+        , };
 
-                // Alert icon (SVG)
-                const icon = document.createElement("div");
-                icon.innerHTML = `
+        // Create alert div
+        const alertDiv = document.createElement("div");
+        alertDiv.id = "custom-alert";
+        alertDiv.className = `${colors[type]} text-white fixed top-24 right-5 px-6 py-4 rounded-lg shadow-lg flex items-center space-x-3 animate-slide-in transition-all duration-300 z-50`;
+
+        // Alert icon (SVG)
+        const icon = document.createElement("div");
+        icon.innerHTML = `
         <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
             xmlns="http://www.w3.org/2000/svg">
             <path stroke-linecap="round" stroke-linejoin="round"
@@ -214,31 +241,32 @@
             </path>
         </svg>`;
 
-                // Alert message
-                const messageText = document.createElement("span");
-                messageText.className = "font-semibold";
-                messageText.innerText = message;
+        // Alert message
+        const messageText = document.createElement("span");
+        messageText.className = "font-semibold";
+        messageText.innerText = message;
 
-                // Close button
-                const closeButton = document.createElement("button");
-                closeButton.innerHTML = "✖";
-                closeButton.className = "text-white hover:text-gray-300 focus:outline-none";
-                closeButton.onclick = () => alertDiv.remove();
+        // Close button
+        const closeButton = document.createElement("button");
+        closeButton.innerHTML = "✖";
+        closeButton.className = "text-white hover:text-gray-300 focus:outline-none";
+        closeButton.onclick = () => alertDiv.remove();
 
-                // Append elements to alert
-                alertDiv.appendChild(icon);
-                alertDiv.appendChild(messageText);
-                alertDiv.appendChild(closeButton);
+        // Append elements to alert
+        alertDiv.appendChild(icon);
+        alertDiv.appendChild(messageText);
+        alertDiv.appendChild(closeButton);
 
-                // Append alert to body
-                document.body.appendChild(alertDiv);
+        // Append alert to body
+        document.body.appendChild(alertDiv);
 
-                // Auto-remove alert after 4 seconds
-                setTimeout(() => {
-                    alertDiv.remove();
-                }, 10000);
-            }
-            function renderTimetable(response) {
+        // Auto-remove alert after 4 seconds
+        setTimeout(() => {
+            alertDiv.remove();
+        }, 10000);
+    }
+
+    function renderTimetable(response) {
         let success = response.data['Sucess']; // Typo in API response (should be "Success")
         let error = response.data['Error'];
         const container = document.getElementById("timetableContainer");

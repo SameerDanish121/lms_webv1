@@ -145,6 +145,10 @@ $imagePath = asset('images/male.png');
                     <span class="text-4xl">📚</span>
                     <p class="mt-2 font-bold text-xs md:text-sm">All Courses</p>
                 </a>
+                <a href="{{ route('full.timetable') }}" class="btn-card bg-white p-6 rounded-xl shadow-md text-center hover:scale-105 transition-transform">
+                    <span class="text-4xl">📚</span>
+                    <p class="mt-2 font-bold text-xs md:text-sm">All Courses</p>
+                </a>
                 <!-- Button 4 -->
                 <a href="" class="btn-card bg-white p-6 rounded-xl shadow-md text-center hover:scale-105 transition-transform">
                     <span class="text-4xl">🎓</span>

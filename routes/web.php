@@ -2,6 +2,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ApiController;
 use App\Http\Controllers\AuthController;
+use Illuminate\Http\Request;
 ////////////////////////////////////////View-open For Post//////////////////////////////////
 Route::get('/forgot-password', function () {
     return view('forgot_password');
@@ -47,6 +48,23 @@ Route::get('/upload/section', function () {
 })->name('show.excel_sections');
 
 
+Route::get('/full/time', function () {
+    return view('test');
+})->name('full.time');
+
+Route::get('/student/details', function (Request $request) {
+    // Retrieve 'student' parameter safely
+    $studentEncoded = $request->query('student'); 
+
+    if (!$studentEncoded) {
+        return redirect()->back()->with('error', 'Invalid student data');
+    }
+
+    // Decode the Base64-encoded JSON
+    $student = json_decode(base64_decode($studentEncoded), true);
+
+    return view('student_details', compact('student'));
+})->name('student.details');
 
 
 
@@ -73,7 +91,10 @@ Route::get('/admin/dashboard', function () {
     }
     return view('Admin_Home', compact('userData'));
 })->name('admin.dashboard');
-
+Route::get('/full/timetable', function () {
+    $timetable = session('timetable'); 
+    return view('full_timetable', compact('timetable'));
+})->name('full');
 
 
 
@@ -97,6 +118,7 @@ Route::post('/login', [AuthController::class, 'handleLogin'])->name('handleLogin
 Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 
 
+Route::get('/timetable', [AuthController::class, 'FullTimetable'])->name('full.timetable');
 
 
 

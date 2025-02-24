@@ -60,23 +60,23 @@
     </style>
 </head>
 @php
-$profileImage = !empty($userData['AdminInfo']['image'] ) ? $userData['AdminInfo']['image']  : asset('images/male.png');
-$userName = $userData['AdminInfo']['name'] ?? 'Unknown User';
-$designation = $userData['AdminInfo']['Designation'] ?? 'Unknown Role';
-$type=$userData['Type']??"Datacell";
+$profileImage = session('profileImage', asset('images/male.png'));
+$userName = session('username', 'Guest');
+$designation = session('designation', 'N/A');
+$type=session('userType', 'User');
+$imagePath = asset('images/male.png');
 @endphp
 <body class="bg-gradient-to-r from-blue-300 via-blue-200 to-blue-100 min-h-screen p-0 m-0">
     @include('components.navbar', [
         'username' => session('username', 'Guest'),
-        'profileImage' => session('profileImage', asset('images/male.png')),
+        'profileImage' => session('profileImage'),
         'designation' => session('designation', 'N/A'),
-        'type' => session('type', 'User')
+        'type' => session('userType', 'User')
     ])
-    
     <div class="max-w-6xl mx-auto mb-1 mt-6 p-6 rounded-2xl shadow-lg text-center fade-in backdrop-blur-lg border border-white/10" style="background: linear-gradient(to bottom right, rgba(0, 198, 255, 0.8), rgba(0, 114, 255, 0.8), rgba(30, 61, 143, 0.8));">
-        <img src="{{ $profileImage ? $profileImage : asset('images/male.png') }}" alt="" class="mx-auto rounded-full border-4 border-white shadow-lg w-24 h-24 object-cover">
-        <h2 class="text-white text-2xl font-bold mt-3">{{ $userData['AdminInfo']['name'] }}</h2>
-        <p class="text-white opacity-80">{{ $userData['Type']}}</p>
+        <img src="{{$profileImage}}" alt="{{$imagePath}}" class="mx-auto rounded-full border-4 border-white shadow-lg w-24 h-24 object-cover">
+        <h2 class="text-white text-2xl font-bold mt-3">{{ $userName }}</h2>
+        <p class="text-white opacity-80">{{ $type}}</p>
         <button class="account-btn text-white px-6 py-3 mt-4 rounded-full bg-white/20 hover:bg-white/30 transition-all duration-300 shadow-lg">Account Details</button>
     </div>
     <div class="relative w-full max-w-8xl overflow-hidden bg-gradient-to-r from-blue-600 to-indigo-800 text-white shadow-lg rounded-lg border border-white/10 mx-auto py-4">
@@ -100,17 +100,48 @@ $type=$userData['Type']??"Datacell";
            <button id="prevBtn" class="bg-white p-3 md:p-4 rounded-lg shadow-md text-center btn-hover mr-2 md:mr-5">⬅️</button>
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 flex-1" id="cardContainer">
                 <!-- Button 1 -->
-                <a href="" class="btn-card bg-white p-6 rounded-xl shadow-md text-center hover:scale-105 transition-transform">
+                <a href="{{route('show.timetable')}}" class="btn-card bg-white p-6 rounded-xl shadow-md text-center hover:scale-105 transition-transform">
                     <span class="text-4xl">📑</span>
                     <p class="mt-2 font-bold text-xs md:text-sm">Upload Timetable</p>
                 </a>
+               
                 <!-- Button 2 -->
-                <a href="" class="btn-card bg-white p-6 rounded-xl shadow-md text-center hover:scale-105 transition-transform">
+                <a href="{{route('show.student_upload')}}" class="btn-card bg-white p-6 rounded-xl shadow-md text-center hover:scale-105 transition-transform">
                     <span class="text-4xl">👨‍🎓</span>
                     <p class="mt-2 font-bold text-xs md:text-sm">Add Students</p>
                 </a>
+                <a href="{{route ('show.excel_teacher')}}" class="btn-card bg-white p-6 rounded-xl shadow-md text-center hover:scale-105 transition-transform">
+                    <span class="text-4xl">👨‍🏫</span>
+                    <p class="mt-2 font-bold text-xs md:text-sm">Add Teachers</p>
+                </a>
+                <a href="{{route ('show.excel_junior')}}" class="btn-card bg-white p-6 rounded-xl shadow-md text-center hover:scale-105 transition-transform">
+                    <span class="text-4xl">👨‍🏫</span>
+                    <p class="mt-2 font-bold text-xs md:text-sm">Add Junior Lecturer</p>
+                </a>
+                <a href="{{route ('show.excel_venue')}}" class="btn-card bg-white p-6 rounded-xl shadow-md text-center hover:scale-105 transition-transform">
+                    <span class="text-4xl">👨‍🏫</span>
+                    <p class="mt-2 font-bold text-xs md:text-sm">Add Venue</p>
+                </a>
+                <a href="{{route ('show.excel_course')}}" class="btn-card bg-white p-6 rounded-xl shadow-md text-center hover:scale-105 transition-transform">
+                    <span class="text-4xl">👨‍🏫</span>
+                    <p class="mt-2 font-bold text-xs md:text-sm">Add Course</p>
+                </a>
+                <a href="{{route ('show.excel_session')}}" class="btn-card bg-white p-6 rounded-xl shadow-md text-center hover:scale-105 transition-transform">
+                    <span class="text-4xl">👨‍🏫</span>
+                    <p class="mt-2 font-bold text-xs md:text-sm">Add Session</p>
+                </a>
+                <a href="{{route ('show.excel_excludedDays')}}" class="btn-card bg-white p-6 rounded-xl shadow-md text-center hover:scale-105 transition-transform">
+                    <span class="text-4xl">👨‍🏫</span>
+                    <p class="mt-2 font-bold text-xs md:text-sm">Add Excluded Days</p>
+                </a>
+                <a href="{{route ('show.excel_sections')}}" class="btn-card bg-white p-6 rounded-xl shadow-md text-center hover:scale-105 transition-transform">
+                    <span class="text-4xl">👨‍🏫</span>
+                    <p class="mt-2 font-bold text-xs md:text-sm">Add Section Data</p>
+                </a>
+
+               
                 <!-- Button 3 -->
-                <a href="" class="btn-card bg-white p-6 rounded-xl shadow-md text-center hover:scale-105 transition-transform">
+                <a href="{{ route('allcourses') }}" class="btn-card bg-white p-6 rounded-xl shadow-md text-center hover:scale-105 transition-transform">
                     <span class="text-4xl">📚</span>
                     <p class="mt-2 font-bold text-xs md:text-sm">All Courses</p>
                 </a>
@@ -126,13 +157,10 @@ $type=$userData['Type']??"Datacell";
                     <p class="mt-2 font-bold text-xs md:text-sm">Teachers</p>
                 </a>
                 <!-- Button 6 -->
-                <a href="" class="btn-card bg-white p-6 rounded-xl shadow-md text-center hover:scale-105 transition-transform">
+                <a href="{{route('allstudents')}}" class="btn-card bg-white p-6 rounded-xl shadow-md text-center hover:scale-105 transition-transform">
                     <span class="text-4xl">👨‍🎓</span>
                     <p class="mt-2 font-bold text-xs md:text-sm">Students</p>
                 </a>
-
-
-
             </div>
 <!-- Next Button: Positioned to the right outside the card with margin -->
 <button id="nextBtn" class="bg-white p-3 md:p-4 rounded-lg shadow-md text-center btn-hover ml-2 md:ml-5">

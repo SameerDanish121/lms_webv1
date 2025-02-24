@@ -13,11 +13,9 @@
         <a href="#" class="nav-item">Teachers</a>
         <a href="#" class="nav-item">Enrollments</a>
     </div>
-
-
     <div class="ml-auto md:ml-5 flex items-center space-x-3">
-        <img src="{{ $profileImage ? $profileImage : asset('images/male.png') }}" 
-        alt="Profile Image" 
+        <img src="{{$profileImage}}" 
+        alt="{{asset('images/male.png')}}" 
         class="w-11 h-10 rounded-full border border-gray-300">
         <div class="flex flex-col">
             <span class="text-gray-600 font-semibold">{{ $username }}</span>
