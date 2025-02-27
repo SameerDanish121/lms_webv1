@@ -98,6 +98,5 @@ $sections = array_keys($timetable);
 </div>
 </div>
 </body>
-
 </html>
 

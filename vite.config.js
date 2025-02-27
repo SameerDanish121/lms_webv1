@@ -22,7 +22,7 @@ export default defineConfig({
             refresh: true,
         }),
     ],server: {
-        host: '192.168.0.108', // Your local IP
+        host: '127.0.0.1', // Your local IP
         port: 5173, // Default Vite port
         strictPort: true,
         hmr: false,

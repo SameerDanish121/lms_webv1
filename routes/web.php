@@ -52,6 +52,11 @@ Route::get('/full/time', function () {
     return view('test');
 })->name('full.time');
 
+
+Route::get('/send/notification', function () {
+    return view('Notification.notification_sending');
+})->name('send.notification');
+
 Route::get('/student/details', function (Request $request) {
     // Retrieve 'student' parameter safely
     $studentEncoded = $request->query('student'); 
@@ -129,3 +134,25 @@ Route::get('/get-api-url', [ApiController::class, 'getApiUrl']);
 
 
 Route::get('/update-api', [ApiController::class, 'updateApiUrl']);
+
+
+//////////////////////////////////////////////////////////////Under-Trail///////////////////////////////
+Route::get('/student/transcript', function () {
+    return view('single_student_info.transcript');
+})->name('student.transcript');
+Route::get('/add/teacher', function () {
+    return view('form_insertion.teacher');
+})->name('add.teacher');
+Route::get('/add/junior', function () {
+    return view('form_insertion.junior');
+})->name('add.junior');
+Route::get('/section/attendance', function () {
+    return view('section_info.section_attendance');
+})->name('section.attendance');
+
+Route::get('/add/datacell', function () {
+    return view('form_insertion.datacell');
+})->name('add.datacell');
+Route::get('/add/admin', function () {
+    return view('form_insertion.admin');
+})->name('add.admin');

@@ -1,21 +1,19 @@
 <div class="relative inline-block text-left w-48">
     <!-- Button -->
     <button onclick="toggleDropdown('{{ $id }}')" class="w-full flex justify-between items-center px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-500 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transform transition-all duration-300 hover:scale-105">
-        <span id="{{ $id }}_selected">Select</span> 
+        <span id="{{ $id }}_selected">Select</span>
         <span class="ml-2 transition-transform transform rotate-0" id="{{ $id }}_arrow">&#9662;</span> <!-- Down Arrow -->
     </button>
-    
+
     <!-- Dropdown Menu -->
     <div id="{{ $id }}" class="absolute right-0 mt-2 w-full bg-white/90 backdrop-blur-lg text-blue-700 rounded-lg shadow-xl opacity-0 scale-95 transform transition-all duration-300 ease-out hidden z-50">
         <ul class="py-2">
-            
             @foreach ($items as $item)
-                <li>
-                    <a href="{{ $item['url'] }}" onclick="selectItem('{{ $id }}', '{{ $item['label'] }}')" 
-                       class="block px-4 py-2 transition duration-300 ease-in-out hover:bg-gradient-to-r from-blue-500 to-blue-400 hover:text-white rounded-md hover:pl-6">
-                        {{ $item['label'] }}
-                    
-                </li>
+            <li onclick="selectItem('{{ $id }}', '{{ $item['label'] }}')"
+            class="block px-4 py-2 transition duration-300 ease-in-out hover:bg-gradient-to-r from-blue-500 to-blue-400 hover:text-white rounded-md hover:pl-6 cursor-pointer">
+            {{ $item['label'] }}
+        </li>
+
             @endforeach
         </ul>
     </div>
@@ -48,29 +46,3 @@
         toggleDropdown(id);
     }
 </script>
-
-
-
-
-
-
-{{-- function showLoader() {
-    document.getElementById("loader").classList.remove("hidden");
-}
-
-function hideLoader() {
-    document.getElementById("loader").classList.add("hidden");
-} --}}
-
-
-{{-- <div class="glass text-white flex flex-col items-center">
-    <div class="progress-container">
-        <div class="progress-line" id="progress-line"></div>
-        <div class="progress-bar">
-            <div id="step1" class="step active">1</div>
-            <div id="step2" class="step">2</div>
-            <div id="step3" class="step">3</div>
-        </div>
-        <div id="loader" class="hidden fixed top-0 left-0 w-full h-full justify-center items-center bg-white bg-opacity-50">
-<div class="animate-spin rounded-full h-16 w-16 border-t-4 border-blue-500"></div>
-</div> --}}
