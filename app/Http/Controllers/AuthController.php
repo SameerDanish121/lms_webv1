@@ -11,9 +11,8 @@ class AuthController extends Controller
     public function __construct()
     {
         ApiConfig::init();
-        $this->baseUrl = ApiConfig::getApiBaseUrl(); 
+        $this->baseUrl = ApiConfig::getApiBaseUrl();
     }
-
     public function login()
     {
         return view('login');
@@ -24,17 +23,18 @@ class AuthController extends Controller
             'username' => 'required',
             'password' => 'required',
         ]);
-        $response = Http::get($this->baseUrl.'api/Login', [
+        $response = Http::get($this->baseUrl . 'api/Login', [
             'username' => $request->username,
             'password' => $request->password,
         ]);
         $data = $response->json();
         if ($response->successful() && isset($data['Type'])) {
-            
+
             if ($data['Type'] == 'Admin') {
                 session([
                     'userType' => 'Admin',
-                    'userId' => $data['AdminInfo']['id'],
+                    'Id' => $data['AdminInfo']['id'],
+                    'userId' => $data['AdminInfo']['user_id'],
                     'username' => $data['AdminInfo']['name'],
                     'phoneNumber' => $data['AdminInfo']['phone_number'],
                     'designation' => $data['AdminInfo']['Designation'],
@@ -48,7 +48,8 @@ class AuthController extends Controller
             } elseif ($data['Type'] == 'Datacell') {
                 session([
                     'userType' => 'Datacell',
-                    'userId' => $data['DatacellInfo']['id'],
+                    'userId' => $data['DatacellInfo']['user_id'],
+                    'Id' => $data['DatacellInfo']['id'],
                     'username' => $data['DatacellInfo']['name'],
                     'phoneNumber' => $data['DatacellInfo']['phone_number'],
                     'designation' => $data['DatacellInfo']['Designation'],
@@ -72,7 +73,7 @@ class AuthController extends Controller
         $response = Http::get($this->baseUrl . 'api/Admin/AllStudent');
         if ($response->successful()) {
             $data = $response->json(); // Decode JSON
-            $students = $data['Student'] ?? []; 
+            $students = $data['Student'] ?? [];
         } else {
             $students = [];
         }
@@ -83,7 +84,7 @@ class AuthController extends Controller
         $response = Http::get($this->baseUrl . 'api/Admin/courses');
         if ($response->successful()) {
             $data = $response->json(); // Decode JSON
-            $courses = $data['Courses'] ?? []; 
+            $courses = $data['Courses'] ?? [];
         } else {
             $courses = [];
         }
@@ -94,18 +95,69 @@ class AuthController extends Controller
         $response = Http::post($this->baseUrl . 'api/Uploading/timetable/section');
         if ($response->successful()) {
             $data = $response->json(); // Decode JSON
-            $timetable = $data['timetable'] ?? []; 
+            $timetable = $data['timetable'] ?? [];
         } else {
             $courses = [];
         }
         return redirect()->route('full')->with('timetable', $timetable);
-    }
-    public function handletimetable(Request $request){
-
     }
     public function logout()
     {
         Session::forget('user');
         return redirect()->route('login')->with('success', 'Logged out successfully.');
     }
+    public function updateProfile(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string',
+            'phone_number' => 'required|string',
+            'Designation' => 'required|string',
+            'email' => 'nullable|email',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048'
+        ]);
+
+        // Get logged-in user ID
+        $userId = session('userId');
+
+        if (!$userId) {
+            return back()->withErrors(['error' => 'User not authenticated.']);
+        }
+
+        // Prepare data for API request
+        $formData = [
+            'role' => session('userType'),
+            'name' => trim($request->input('name')),
+            'phone_number' => $request->input('phone_number'),
+            'Designation' => $request->input('Designation'),
+            'email' => $request->input('email')
+        ];
+
+        // Check if image is uploaded
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $formData['image'] = fopen($image->path(), 'r');
+        }
+
+        // Send request to API
+        $response = Http::attach(
+            'image',
+            $request->file('image') ? fopen($request->file('image')->path(), 'r') : null,
+            $request->file('image') ? $request->file('image')->getClientOriginalName() : null
+        )->post($this->baseUrl . "api/Insertion/update-single-user/{$userId}", $formData);
+
+        $data = $response->json();
+
+        if ($response->successful() && $data['status'] === 'success') {
+            session([
+                'username' => $formData['name'],
+                'phoneNumber' => $formData['phone_number'],
+                'designation' => $formData['Designation'],
+                'profileImage' => $data['image'] ?? session('profileImage'),
+            ]);
+            return back()->with('success', 'Profile updated successfully.');
+        }
+
+        return back()->withErrors(['error' => $data['message'] ?? 'Failed to update profile.']);
+    }
+
 }

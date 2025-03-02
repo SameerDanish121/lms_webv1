@@ -66,15 +66,10 @@
             color: #024CAA;
             box-shadow: 0px 0px 15px rgba(255, 255, 255, 0.5);
         }
-
     </style>
 </head>
 
 <body>
-
-
-
-    <!-- Heading -->
     <h1 class="text-4xl font-bold mb-6 text-center text-[#024CAA]">
         <span class="text-black">Welcome to</span> <span class="text-5xl">LMS</span>
     </h1>
@@ -82,16 +77,6 @@
     <!-- Glassmorphic Login Card -->
     <div class="glass text-white flex flex-col items-center">
         <h2 class="login-title">Login</h2>
-
-        {{--
-        <!-- Error Alert (If Exists) -->
-        @if(session('success'))
-        <div id="success-alert" class="bg-green-600 text-white p-4 rounded-md w-full text-center mb-4">
-            {{ session('success') }}
-    </div>
-    @endif --}}
-
-    <!-- Login Form -->
     <form action="{{ route('handleLogin') }}" method="POST" class="w-full flex flex-col items-center">
         @csrf
 
@@ -119,7 +104,7 @@
 
 
         function clearSession() {
-            fetch("{{ route('clear.session') }}", { // Uses named route
+            fetch("{{ route('clear.session') }}", {
                     method: 'GET'
                     , headers: {
                         'Accept': 'application/json'
@@ -148,7 +133,6 @@
             let errorAlert = document.getElementById('error-alert');
             if (errorAlert) {
                 errorAlert.style.display = 'none';
-                clearSession();
             }
         }, 5000);
 

@@ -46,6 +46,10 @@
                             </label>
                         </div>
                     </div>
+                    <div>
+                        <label class="block text-lg font-semibold">CNIC</label>
+                        <input type="text" id="cnic" placeholder="XXXXX-XXXXXXX-X" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500">
+                    </div>
                 </div>
 
                 <div class="space-y-4">
@@ -61,6 +65,7 @@
                         </div>
                     </div>
                 </div>
+                
             </form>
 
             <div class="text-center mt-6">
@@ -169,9 +174,10 @@
             let dob = document.getElementById("dob").value;
             let gender = document.querySelector('input[name="gender"]:checked') ? document.querySelector('input[name="gender"]:checked').value : "";
             let email = document.getElementById("email").value.trim();
+            let cnic = document.getElementById("cnic").value.trim();
             let picture = document.getElementById("picture").files[0];
 
-            if (!name || !dob || !gender) {
+            if (!name || !dob || !gender || !cnic) {
                 hideLoader();
                 showMessage("Please fill in all required fields.", "text-red-600");
                 return;
@@ -181,6 +187,7 @@
             formData.append("name", name);
             formData.append("date_of_birth", dob);
             formData.append("gender", gender);
+            formData.append("cnic", cnic);
             if (email) formData.append("email", email);
             if (picture) formData.append("image", picture);
 

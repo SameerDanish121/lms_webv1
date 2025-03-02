@@ -69,12 +69,15 @@
 
                     <!-- Image Upload Field -->
                     <div>
+                      
+
                         <label class="block text-lg font-semibold">Upload Picture (Optional)</label>
                         <div class="flex items-center space-x-3">
                             <img id="imagePreview" class="w-12 h-12 object-cover rounded-full border hidden">
                             <input type="file" id="picture" accept="image/*"
                                 class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500">
                         </div>
+                        <img id="imagePreview" class="w-16 h-16 object-cover rounded-full border hidden" alt="Selected Image">
                     </div>
                 </div>
             </form>
@@ -103,6 +106,23 @@
         </div>
     </div>
     <script>
+         document.getElementById("picture").addEventListener("change", function (event) {
+        let file = event.target.files[0];
+        let imagePreview = document.getElementById("imagePreview");
+
+        if (file) {
+            let reader = new FileReader();
+            reader.onload = function (e) {
+                imagePreview.src = e.target.result;
+                imagePreview.classList.remove("hidden");
+                imagePreview.classList.add("block");
+            };
+            reader.readAsDataURL(file);
+        } else {
+            imagePreview.src = "";
+            imagePreview.classList.add("hidden");
+        }
+    });
         window.addEventListener("load", function() {
             document.getElementById("loader").classList.add("hidden");
         });
