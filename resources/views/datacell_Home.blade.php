@@ -288,6 +288,49 @@
             Click Me ➡️
         </a>
     </div>
+    <div class="bg-white shadow-lg rounded-lg p-6 text-center">
+        <h2 class="text-xl font-semibold text-gray-800">Teacher Offered Course</h2>
+        <p class="text-gray-600 mt-2">Click below to Upload Course for Session with Teacher Allocation</p>
+        <a href="{{route('show.offered_Course')}}" class="mt-4 inline-block bg-purple-500 text-white px-6 py-3 rounded-lg shadow-md hover:bg-purple-600 transition">
+            Click Me ➡️
+        </a>
+    </div>
+    <div class="bg-white shadow-lg rounded-lg p-6 text-center">
+        <h2 class="text-xl font-semibold text-gray-800">Enrollments</h2>
+        <p class="text-gray-600 mt-2">Click below to Upload Student Enrollments is a Session</p>
+        <a href="{{route('show.enrollments')}}" class="mt-4 inline-block bg-purple-500 text-white px-6 py-3 rounded-lg shadow-md hover:bg-purple-600 transition">
+            Click Me ➡️
+        </a>
+    </div>
+    <div class="bg-white shadow-lg rounded-lg p-6 text-center">
+        <h2 class="text-xl font-semibold text-gray-800">Add Grader and Assign to Teacher</h2>
+        <p class="text-gray-600 mt-2">Click below to Upload Student Grader Assign </p>
+        <a href="{{route('show.grader')}}" class="mt-4 inline-block bg-purple-500 text-white px-6 py-3 rounded-lg shadow-md hover:bg-purple-600 transition">
+            Click Me ➡️
+        </a>
+    </div>
+    <div class="bg-white shadow-lg rounded-lg p-6 text-center">
+        <h2 class="text-xl font-semibold text-gray-800">Add Junior Course Allocaion List </h2>
+        <p class="text-gray-600 mt-2">Click below to Junior Course Allocation List </p>
+        <a href="{{route('show.junior_courseAllocation')}}" class="mt-4 inline-block bg-purple-500 text-white px-6 py-3 rounded-lg shadow-md hover:bg-purple-600 transition">
+            Click Me ➡️
+        </a>
+    </div>
+    <div class="bg-white shadow-lg rounded-lg p-6 text-center">
+        <h2 class="text-xl font-semibold text-gray-800">Add Topic For A Course Per Week </h2>
+        <p class="text-gray-600 mt-2">Click below to Add Topics</p>
+        <a href="{{route('show.topic_coursePerWeek')}}" class="mt-4 inline-block bg-purple-500 text-white px-6 py-3 rounded-lg shadow-md hover:bg-purple-600 transition">
+            Click Me ➡️
+        </a>
+    </div>
+    <div class="bg-white shadow-lg rounded-lg p-6 text-center">
+        <h2 class="text-xl font-semibold text-gray-800">Add Full Subject Result List </h2>
+        <p class="text-gray-600 mt-2">Click below to Add Full Award List of A Section and Subject (MID/FINAL/LAB/INTERNAL/GRADE)</p>
+        <a href="{{route('show.subject_result')}}" class="mt-4 inline-block bg-purple-500 text-white px-6 py-3 rounded-lg shadow-md hover:bg-purple-600 transition">
+            Click Me ➡️
+        </a>
+    </div>
+   
 </div>
  
  

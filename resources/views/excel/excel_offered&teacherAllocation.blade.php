@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LMS - Timetable</title>
+    <title>LMS - Offered Course</title>
     @vite('resources/css/app.css')
     <style>
         @keyframes fadeIn {
@@ -50,7 +50,6 @@
         }
 
     </style>
-
 </head>
 
 <body class="bg-gradient-to-r from-blue-300 via-blue-200 to-blue-100 min-h-screen p-0 m-0">
@@ -60,8 +59,13 @@
     'designation' => session('designation', 'N/A'),
     'type' => session('type', 'User')
     ])
+
+
     <div class="max-w-4xl mx-auto bg-white shadow-md rounded-lg p-6 mt-6 text-center">
-        <h2 class="text-2xl font-bold text-gray-700 mb-4">Upload Timetable</h2>
+        <div class="w-full bg-blue-600 text-white text-center py-2 text-lg font-semibold shadow-md">
+            Current Session: {{ session('currentSession', 'No Session Found') }}
+        </div>
+        <h2 class="text-2xl font-bold text-gray-700 mb-4">Upload Offered Course with Teacher Allocation</h2>
         <div class="flex justify-center space-x-4 ">
             <label for="sessionDropdown" class="block text-gray-700 font-bold mb-2">Select Session:</label>
             <select id="sessionDropdown" class="block w-64 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
@@ -132,6 +136,32 @@
         API_BASE_URL = await getApiBaseUrl();
     }
     initializeApiBaseUrl();
+    document.addEventListener("DOMContentLoaded", async function() {
+        const dropdown = document.getElementById("sessionDropdown");
+        try {
+            let response = await fetch(`${API_BASE_URL}api/Dropdown/AllSessions`);
+            let data = await response.json();
+
+            if (Array.isArray(data)) {
+                dropdown.innerHTML = ""; // Clear existing options
+
+                data.forEach(session => {
+                    const option = document.createElement("option");
+                    option.value = session;
+                    option.textContent = session;
+                    dropdown.appendChild(option);
+                });
+
+                if (dropdown.options.length > 0) {
+                    dropdown.options[0].selected = true; // Select the first session by default
+                }
+            } else {
+                console.error("Failed to fetch sessions or data format is incorrect");
+            }
+        } catch (error) {
+            console.error("Error fetching session data:", error);
+        }
+    });
     document.getElementById("timetableUpload").addEventListener("change", function() {
         let file = this.files[0];
         let fileNameDisplay = document.getElementById("fileNameDisplay");
@@ -145,24 +175,6 @@
     document.getElementById("submitButton").addEventListener("click", function() {
         showAlert("Submitted", "success");
     });
-    document.addEventListener("DOMContentLoaded", function() {
-        const dropdown = document.getElementById("sessionDropdown");
-        const currentYear = new Date().getFullYear();
-        const seasons = ["Spring", "Summer", "Fall"];
-
-        for (let year = currentYear; year >= currentYear - 5; year--) {
-            seasons.forEach(season => {
-                const option = document.createElement("option");
-                option.value = `${season}-${year}`;
-                option.textContent = `${season}-${year}`;
-                if (year === currentYear && season === "Spring") {
-                    option.selected = true;
-                }
-                dropdown.appendChild(option);
-            });
-        }
-    });
-
     document.getElementById("submitButton").addEventListener("click", async function() {
         showLoader();
         let fileInput = document.getElementById("timetableUpload");
@@ -185,7 +197,7 @@
 
         try {
             initializeApiBaseUrl();
-            let response = await fetch(`${API_BASE_URL}api/Uploading/uplaod/timetable`, {
+            let response = await fetch(`${API_BASE_URL}api/Uploading/excel-upload/offeredcourse_teacherallocation`, {
                 method: "POST"
                 , body: formData
             , });
@@ -195,7 +207,7 @@
             if (response.status === 200) {
                 hideLoader();
                 renderTimetable(result);
-                showAlert(`Upload Successful!\nSuccessfully Added Records Count: ${result.data["Successfully Added Records Count :"]}\nFaulty Records Count: ${result.data["Faulty Records Count :"]}`, 'success');
+                showAlert(`Upload Successful!\nSuccessfully Added Records Count: ${result.data["Total Inserted"]}\nFaulty Records Count: ${result.data["Total Failure"]}`, 'success');
             } else {
                 hideLoader();
                 showAlert('Upload Failed: Not Uploaded ');
@@ -263,8 +275,8 @@
     }
 
     function renderTimetable(response) {
-        let success = response.data['Sucess']; // Typo in API response (should be "Success")
-        let error = response.data['Error'];
+        let success = response.data['Sucessfull']; // Typo in API response (should be "Success")
+        let error = response.data['FaultyData'];
         const container = document.getElementById("timetableContainer");
 
         const successTable = `
@@ -274,17 +286,16 @@
                     <table class="w-full border-collapse border border-gray-300 text-gray-700">
                         <thead>
                             <tr class="bg-green-500 text-white">
-                                <th class="border border-gray-300 p-2">Day</th>
-                                <th class="border border-gray-300 p-2">Time</th>
-                                <th class="border border-gray-300 p-2">Record</th>
+                                <th class="border border-gray-300 p-2">Status</th>
+                                <th class="border border-gray-300 p-2">Data</th>
                             </tr>
                         </thead>
                         <tbody>
                             ${success.map(record => `
                                 <tr class="bg-green-100">
-                                    <td class="border p-2 text-center">${record.Day}</td>
-                                    <td class="border p-2 text-center">${record.Time}</td>
-                                    <td class="border p-2 text-center">${record.Record}</td>
+                                    <td class="border p-2 text-center">${record.status}</td>
+                                    <td class="border p-2 text-center">${record.data}</td>
+                                
                                 </tr>
                             `).join('')}
                         </tbody>
@@ -308,7 +319,7 @@
                             ${error.map(record => `
                                 <tr class="bg-red-100">
                                     <td class="border p-2 text-center">${record.status}</td>
-                                    <td class="border p-2 text-center">${record.issue??record.Record}</td>
+                                    <td class="border p-2 text-center">${record.Issue??record.Record}</td>
                                 </tr>
                             `).join('')}
                         </tbody>

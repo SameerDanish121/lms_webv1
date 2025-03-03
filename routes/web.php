@@ -30,6 +30,12 @@ Route::get('/upload/course', function () {return view('excel.excel_course');})->
 Route::get('/upload/session', function () {return view('excel.excel_Session');})->name('show.excel_session');
 Route::get('/upload/excludeddays', function () {return view('excel.excel_excludeddays');})->name('show.excel_excludedDays');
 Route::get('/upload/section', function () {return view('excel.excel_section');})->name('show.excel_sections');
+Route::get('/excel/offered_course', function () {return view('excel.excel_offered&teacherAllocation');})->name('show.offered_Course');
+Route::get('/excel/enrollments', function () {return view('excel.excel_enrollments');})->name('show.enrollments');
+Route::get('/excel/grader_assign', function () {return view('excel.excel_graderList');})->name('show.grader');
+Route::get('/excel/junior_assign', function () {return view('excel.excel_JuniorCourseAllocation');})->name('show.junior_courseAllocation');
+Route::get('/excel/course_topic', function () {return view('excel.excel_TopicOfSubjectPerWeek');})->name('show.topic_coursePerWeek');
+Route::get('/excel/subject_result', function () {return view('excel.excel_fullSubjectResult');})->name('show.subject_result');
 //--------------------------------------------------------SINGLE INSERTION WITH FORM (ADD)----------------------------------------
 Route::get('/add/datacell', function () {return view('form_insertion.datacell');})->name('add.datacell');
 Route::get('/add/admin', function () {return view('form_insertion.admin');})->name('add.admin');
