@@ -36,12 +36,15 @@ Route::get('/excel/grader_assign', function () {return view('excel.excel_graderL
 Route::get('/excel/junior_assign', function () {return view('excel.excel_JuniorCourseAllocation');})->name('show.junior_courseAllocation');
 Route::get('/excel/course_topic', function () {return view('excel.excel_TopicOfSubjectPerWeek');})->name('show.topic_coursePerWeek');
 Route::get('/excel/subject_result', function () {return view('excel.excel_fullSubjectResult');})->name('show.subject_result');
+Route::get('/excel/exam_marks', function () {return view('excel.excel_examMarks');})->name('show.exam_marks');
 //--------------------------------------------------------SINGLE INSERTION WITH FORM (ADD)----------------------------------------
 Route::get('/add/datacell', function () {return view('form_insertion.datacell');})->name('add.datacell');
 Route::get('/add/admin', function () {return view('form_insertion.admin');})->name('add.admin');
 Route::get('/add/student', function () {return view('form_insertion.student');})->name('add.student');
 Route::get('/add/teacher', function () {return view('form_insertion.teacher');})->name('add.teacher');
 Route::get('/add/junior', function () {return view('form_insertion.junior');})->name('add.junior');
+Route::get('/add/exam', function () {return view('form_insertion.exam');})->name('add.exam');
+Route::get('/add/course_content', function () {return view('form_insertion.course_content');})->name('add.course_content');
 //--------------------------------------------------------MANUAL PUSH NOTIFICATION (ADD)----------------------------------------
 Route::get('/send/notification', function () {return view('Notification.notification_sending');})->name('send.notification');
 //--------------------------------------------------------Student Flow (List to Single View)----------------------------------------

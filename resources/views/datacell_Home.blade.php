@@ -330,7 +330,28 @@
             Click Me ➡️
         </a>
     </div>
-   
+    <div class="bg-white shadow-lg rounded-lg p-6 text-center">
+        <h2 class="text-xl font-semibold text-gray-800">Add Full Subject Exam List </h2>
+        <p class="text-gray-600 mt-2">Click below to Add Obtained Marks of a Section Question Wise</p>
+        <a href="{{route('show.exam_marks')}}" class="mt-4 inline-block bg-purple-500 text-white px-6 py-3 rounded-lg shadow-md hover:bg-purple-600 transition">
+            Click Me ➡️
+        </a>
+    </div>
+    <div class="bg-white shadow-lg rounded-lg p-6 text-center">
+        <h2 class="text-xl font-semibold text-gray-800">Add Exam</h2>
+        <p class="text-gray-600 mt-2">Click below to Add Exam and Question</p>
+        <a href="{{route('add.exam')}}" class="mt-4 inline-block bg-purple-500 text-white px-6 py-3 rounded-lg shadow-md hover:bg-purple-600 transition">
+            Click Me ➡️
+        </a>
+    </div>
+    <div class="bg-white shadow-lg rounded-lg p-6 text-center">
+        <h2 class="text-xl font-semibold text-gray-800">Add Course Content</h2>
+        <p class="text-gray-600 mt-2">Click below to Add Course Content</p>
+        <a href="{{route('add.course_content')}}" class="mt-4 inline-block bg-purple-500 text-white px-6 py-3 rounded-lg shadow-md hover:bg-purple-600 transition">
+            Click Me ➡️
+        </a>
+    </div>
+    
 </div>
  
  
