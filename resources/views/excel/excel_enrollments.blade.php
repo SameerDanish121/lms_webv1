@@ -83,44 +83,13 @@
                 Submit
             </button>
         </div>
-
-
         <p id="fileNameDisplay" class="text-gray-600 mt-4"></p>
     </div>
-
-
-    <script>
-        window.addEventListener("load", function() {
-            document.getElementById("loader").classList.add("hidden");
-        });
-
-        function showLoader() {
-            document.getElementById("loader").classList.remove("hidden");
-        }
-
-        function hideLoader() {
-            document.getElementById("loader").classList.add("hidden");
-        }
-
-    </script>
-
-     @include('components.loader')
-
     <div id="timetableContainer"></div>
-    <footer class="bg-blue-600 p-2 mt-20 shadow-md text-center">
-        <h4 class=" font-bold text-2xl mb-4 mt-4 text-white">Learning Management System</h4>
-        <p class="text-white text-1xl">&copy; 2025 LMS. All Rights Reserved.</p>
-        <p class="text-white text-1xl">Sameer | Ali | Sharjeel</p>
-    </footer>
+    @include('components.loader')
+    @include('components.footer')
 </body>
 <script>
-    function showLoader() {
-        document.getElementById("loader").classList.remove("hidden");
-    }
-
-    function hideLoader() {
-        document.getElementById("loader").classList.add("hidden");
-    }
     let API_BASE_URL = "http://127.0.0.1:8000/";
     async function getApiBaseUrl() {
         try {
@@ -134,10 +103,11 @@
     async function initializeApiBaseUrl() {
         API_BASE_URL = await getApiBaseUrl();
     }
-    initializeApiBaseUrl();
+    
     document.addEventListener("DOMContentLoaded", async function () {
     const dropdown = document.getElementById("sessionDropdown");
     try {
+        await initializeApiBaseUrl();
         let response = await fetch(`${API_BASE_URL}api/Dropdown/AllSessions`);
         let data = await response.json();
 
@@ -195,7 +165,7 @@
         submitButton.textContent = "Uploading...";
 
         try {
-            initializeApiBaseUrl();
+           await initializeApiBaseUrl();
             let response = await fetch(`${API_BASE_URL}api/Uploading/excel-upload/student-enrollments`, {
                 method: "POST"
                 , body: formData
@@ -221,7 +191,6 @@
     });
 
     function showAlert(message, type = "error") {
-        // Remove existing alert if present
         const existingAlert = document.getElementById("custom-alert");
         if (existingAlert) existingAlert.remove();
 

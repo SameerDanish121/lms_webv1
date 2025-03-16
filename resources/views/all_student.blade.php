@@ -20,7 +20,6 @@
             searchValue = value;
             refreshStudents();
         }
-
         function refreshStudents() {
             console.log('Searching by:', searchType, 'Value:', searchValue);
         }

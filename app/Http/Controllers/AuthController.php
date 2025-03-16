@@ -43,6 +43,10 @@ class AuthController extends Controller
                     'startDate' => $data['AdminInfo']['Start Date'],
                     'endDate' => $data['AdminInfo']['End Date'],
                     'profileImage' => $data['AdminInfo']['image'] ?? asset('images/male.png'),
+                    'course_count' => $data['AdminInfo']['course_count'],
+                    'student_count' => $data['AdminInfo']['student_count'],
+                    'faculty_count' => $data['AdminInfo']['faculty_count'],
+                    'offer_count' => $data['AdminInfo']['offered_course_count'],
                 ]);
                 return redirect()->route('admin.dashboard')->with('userData', $data);
             } elseif ($data['Type'] == 'Datacell') {
@@ -58,6 +62,11 @@ class AuthController extends Controller
                     'startDate' => $data['DatacellInfo']['Start Date'],
                     'endDate' => $data['DatacellInfo']['End Date'],
                     'profileImage' => $data['DatacellInfo']['image'] ?? asset('images/male.png'),
+                    'course_count' => $data['DatacellInfo']['course_count'],
+                    'student_count' => $data['DatacellInfo']['student_count'],
+                    'faculty_count' => $data['DatacellInfo']['faculty_count'],
+                    'offer_count' => $data['DatacellInfo']['offered_course_count'],
+                
                 ]);
                 return redirect()->route('datacell.dashboard')->with('userData', $data);
             } else {
@@ -79,6 +88,28 @@ class AuthController extends Controller
         }
         return redirect()->route('datacell.student')->with('students', $students);
     }
+    public function Transcript(Request $request)
+    {
+        $studentID=$request->student_id;
+        $response = Http::get($this->baseUrl . 'api/Admin/viewTranscript', [
+            'student_id' => $studentID
+        ]);
+        if ($response->successful()) {
+            $data = $response->json(); // Decode JSON response
+            $student = $data['student'] ?? [];
+            $program = $data['program'] ?? [];
+            $sessionResults = $data['sessionResults'] ?? [];
+
+            return view('single_student_info.view_transcript', [ // Replace 'your_view_name' with the actual Blade view file name
+                'student' => $student,
+                'sessionResults' => $sessionResults,
+                'program' => $program
+            ]);
+        }
+
+        return abort(404, 'Transcript not found'); // Handle errors
+    }
+
     public function AllCourse(Request $request)
     {
         $response = Http::get($this->baseUrl . 'api/Admin/courses');

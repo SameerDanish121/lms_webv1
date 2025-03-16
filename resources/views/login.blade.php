@@ -1,6 +1,6 @@
+
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -18,7 +18,7 @@
         }
 
         .forgot:hover {
-            color: white;
+            color: blue;
         }
 
         .glass {
@@ -27,9 +27,9 @@
             border-radius: 20px;
             border: 1px solid rgba(255, 255, 255, 0.3);
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-            padding: 40px;
-            width: 100%;
-            max-width: 500px;
+            padding: 35px;
+            width: 95%%;
+            max-width: 470px;
             min-height: 500px;
             display: flex;
             flex-direction: column;
@@ -38,7 +38,7 @@
 
         .login-title {
             text-align: center;
-            font-size: 4rem;
+            font-size: 50px;
             font-weight: bold;
             color: #024CAA;
             margin-bottom: 50px;
@@ -68,24 +68,20 @@
         }
     </style>
 </head>
-
 <body>
-    <h1 class="text-4xl font-bold mb-6 text-center text-[#024CAA]">
-        <span class="text-black">Welcome to</span> <span class="text-5xl">LMS</span>
+    <h1 class="text-3xl font-bold mb-6 text-center text-[#024CAA]">
+        <span class="text-black">Welcome to</span> <span class="text-4xl">LMS</span>
     </h1>
-    
-    <!-- Glassmorphic Login Card -->
     <div class="glass text-white flex flex-col items-center">
         <h2 class="login-title">Login</h2>
     <form action="{{ route('handleLogin') }}" method="POST" class="w-full flex flex-col items-center">
         @csrf
-
         <div class="mb-6 w-full">
-            <input type="text" id="username" name="username" placeholder="Enter Your Username" class="input-field w-full p-4 rounded-lg border text-black focus:outline-none transition-all duration-300" required>
+            <input type="text" id="username" name="username" placeholder="Enter Your Username" class="input-field w-full p-2 rounded-lg border text-black focus:outline-none transition-all duration-300" required>
         </div>
 
-        <div class="mb-4 w-full">
-            <input type="password" id="password" name="password" placeholder="Enter Your Password" class="input-field w-full p-4 rounded-lg border text-black focus:outline-none transition-all duration-300" required>
+        <div class="mb-6 w-full">
+            <input type="password" id="password" name="password" placeholder="Enter Your Password" class="input-field w-full p-2 rounded-lg border text-black focus:outline-none transition-all duration-300" required>
         </div>
         @if(session('error'))
         <div id="error-alert" class="bg-red-600 text-white p-4 rounded-md w-full text-center mb-4 animate-bounce">
@@ -93,16 +89,14 @@
 
         </div>
         @endif
-        <button type="submit" class="btn-animate w-80 flex justify-center items-center bg-[#024CAA] text-white font-semibold p-4 mt-5 rounded-lg">
+        <button type="submit" class="btn-animate w-80 flex justify-center items-center bg-[#024CAA] text-white font-semibold p-3 mt-5 rounded-lg">
             Login
         </button>
 
-        <a href="{{route('forgot')}}" class="m-4 text-black cursor-pointer forgot">Forgot Password?</a>
+        <a href="{{route('forgot')}}" class="m-4  cursor-pointer forgot">Forgot Password?</a>
     </form>
     </div>
     <script>
-
-
         function clearSession() {
             fetch("{{ route('clear.session') }}", {
                     method: 'GET'
@@ -137,7 +131,6 @@
         }, 5000);
 
     </script>
-
+    @include('components.loader')
 </body>
-
 </html>

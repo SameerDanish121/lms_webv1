@@ -100,14 +100,25 @@
     function hideLoader() {
         document.getElementById("loader").classList.add("hidden");
     }
+    let API_BASE_URL = "http://127.0.0.1:8000/";
+
+        async function getApiBaseUrl() {
+            try {
+                let response = await fetch('/get-api-url');
+                let data = await response.json();
+                return data.api_base_url;
+            } catch (error) {
+                return API_BASE_URL;
+            }
+        }
     document.addEventListener("DOMContentLoaded", async function () {
-        const API_BASE_URL = "http://127.0.0.1:8000/";
         const form = document.getElementById("uploadButton");
         const questionsTable = document.getElementById("questionsTable");
 
         // Fetch course options from API
         async function fetchCourses() {
             try {
+                API_BASE_URL = await getApiBaseUrl();
                 let response = await fetch(`${API_BASE_URL}api/Dropdown/AllOfferedCourse`);
                 let data = await response.json();
                 const dropdown = document.getElementById("course");
@@ -227,17 +238,16 @@
                 formData.append(`questions[${index}][q_no]`, q.q_no);
                 formData.append(`questions[${index}][marks]`, q.marks);
             });
-
             try {
+                API_BASE_URL = await getApiBaseUrl();
                 let response = await fetch(`${API_BASE_URL}api/Uploading/uplaod/Exam`, {
                     method: "POST",
                     body: formData
                 });
-
                 let result = await response.json();
                 if (response.ok) {
                     hideLoader();
-                    showAlert(`Exam uploaded successfully !`, 'success');
+                    showAlert('Exam Created Successfully', 'success');
                     location.reload();
                 } else {
                     hideLoader();
@@ -250,9 +260,15 @@
                 showAlert(`Upload Failed: \n${errorMessage}`, "error");
                 }
             } catch (error) {
+                let errorMessage = error.message || "Something went wrong!";
+                if (typeof error.errors === "object") {
+                    errorMessage += "\n" + Object.values(error.errors).flat().join("\n");
+                } else if (typeof error.errors === "string") {
+                    errorMessage += "\n" + error.errors; // Directly append if it's a string
+                }
                 console.error("API error:", error);
                 hideLoader();
-                showAlert(`Failed to connect to server.`, "error");
+                showAlert(`Failed to connect to server.\n ${errorMessage}`, "error");
             }
         });
     });

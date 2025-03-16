@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 //--------------------------------------------------------ADMIN-DATACELL (AUTHENTICATION + DASHBOARD  HANDLING)----------------------------------------
 Route::get('/', [AuthController::class, 'login'])->name('login');
 Route::post('/login', [AuthController::class, 'handleLogin'])->name('handleLogin');
-Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout'); 
 Route::get('/forgot-password', function () {return view('forgot_password');})->name('forgot');
 Route::get('/datacell/dashboard', function () {$userData = session('userData');if (!empty($userData['user_id'])) {session(['user_id' => $userData['user_id']]);}return view('datacell_Home', compact('userData'));})->name('datacell.dashboard');
 Route::get('/admin/dashboard', function () {$userData = session('userData'); if (!empty($userData['user_id'])) {session(['user_id' => $userData['user_id']]);}return view('Admin_Home', compact('userData'));})->name('admin.dashboard');
@@ -56,8 +56,19 @@ Route::get('/student/details', function (Request $request) {
         return redirect()->back()->with('error', 'Invalid student data');
     }
     $student = json_decode(base64_decode($studentEncoded), true);
+    
     return view('student_details', compact('student'));
 })->name('student.details');
+Route::get('/transcript/{student_id}', [AuthController::class, 'Transcript'])->name('transcript.view');
+Route::get('/grader/info', function (Request $request) {
+    $studentEncoded = $request->query('student_id'); 
+    if (!$studentEncoded) {
+        return redirect()->back()->with('error', 'Invalid student data');
+    }
+    $student_id = json_decode(base64_decode($studentEncoded), true);
+    
+    return view('profile_views.grader_info', compact('student_id'));
+})->name('grader.details');
 //--------------------------------------------------------Courses Flow (List to Single View)----------------------------------------
 Route::get('/allcourses', [AuthController::class, 'AllCourse'])->name('allcourses');
 Route::get('/courses', function () {
@@ -70,27 +81,48 @@ Route::get('/full/timetable', function () {
     $timetable = session('timetable'); 
     return view('full_timetable', compact('timetable'));
 })->name('full');
+//--------------------------------------------------------TEMPORARY ENROLLMENTS----------------------------------------
+Route::get('/all_temp_enrollments', function () {return view('temporary_enrollments.temp');})->name('temp.enroll');
+//--------------------------------------------------------TEACHER VIEW----------------------------------------
+Route::get('/teacher/details', function (Request $request) {
+    $studentEncoded = $request->query('teacher'); 
+    $roleEncoded = $request->query('role'); 
+    if (!$studentEncoded || !$roleEncoded) {
+        return redirect()->back()->with('error', 'Invalid teacher data');
+    }
+    $teacher = json_decode(base64_decode($studentEncoded), true);
+    $role = base64_decode($roleEncoded);
+    return view('profile_views.teacher_profile', compact('teacher', 'role'));
+})->name('teacher.details');
+//--------------------------------------------------------FULL VIEW----------------------------------------
+Route::get('/all_students', function () {return view('All.all_student');})->name('all.student');
+Route::get('/all_course', function () {return view('All.all_course');})->name('all.course');
+Route::get('/all_teacher', function () {return view('All.all_teacher');})->name('all.teacher');
+Route::get('/all_junior', function () {return view('All.all_junior');})->name('all.junior');
+Route::get('/all_grader', function () {return view('All.all_grader');})->name('all.grader');
+Route::get('/all_session', function () {return view('All.all_sessions');})->name('all.session');
+Route::get('/all_archives', function () {return view('archives.archives_home');})->name('all.archives');
+Route::get('/all_content', function () {return view('All.all_course_content');})->name('all.course_content');
+Route::get('/all_course_allocation', function () {return view('All.all_course_allocation');})->name('all.course_allocation');
+Route::get('/course-details', function (Request $request) {
+    $studentEncoded = $request->query('course'); 
+    if (!$studentEncoded) {
+        return redirect()->back()->with('error', 'Invalid course data');
+    }
+    $course = json_decode(base64_decode($studentEncoded), true);
+    
+    return view('section_info.course_section_info', compact('course'));
+})->name('course.details');
+
 
 //--------------------------------------------------------WORKING ON IT----------------------------------------
-Route::get('/student/content', function () {
-    return view('junk.CourseContent');
-});
 Route::get('/student/enroll', function () {
     return view('junk.StudentEnroll');
 });
 Route::get('/student/teacher_course', function () {
     return view('junk.teacher_course');
 });
-Route::get('/student/teacher_course', function () {
-    return view('junk.teacher_course');
-});
-Route::get('/student/temp', function () {
-    return view('junk.temp');
-});
-Route::get('/student/transcript', function () {
-    return view('single_student_info.transcript');
-})->name('student.transcript');
 Route::get('/section/attendance', function () {
     return view('section_info.section_attendance');
 })->name('section.attendance');
-
+Route::get('/all_test', function () {return view('junk.test');})->name('all.test');

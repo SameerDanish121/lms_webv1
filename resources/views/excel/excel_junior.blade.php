@@ -260,7 +260,7 @@
                             ${error.map(record => `
                                 <tr class="bg-red-100">
                                     <td class="border p-2 text-center">${record.status}</td>
-                                    <td class="border p-2 text-center">${record.reason??record.Record}</td>
+                                    <td class="border p-2 text-center">${record.reason}</td>
                                 </tr>
                             `).join('')}
                         </tbody>

@@ -60,8 +60,6 @@
         'designation' => session('designation', 'N/A'),
         'type' => session('type', 'User')
     ])
-
-
     <div class="max-w-4xl mx-auto bg-white shadow-md rounded-lg p-6 mt-6 text-center">
         <h2 class="text-2xl font-bold text-gray-700 mb-4">Upload Course Data</h2>
         <br>
@@ -81,16 +79,9 @@
 
         <p id="fileNameDisplay" class="text-gray-600 mt-4"></p>
     </div>
-
-
-
-
     <div id="timetableContainer"></div>
-    <footer class="bg-blue-600 p-2 mt-20 shadow-md text-center">
-        <h4 class=" font-bold text-2xl mb-4 mt-4 text-white">Learning Management System</h4>
-        <p class="text-white text-1xl">&copy; 2025 LMS. All Rights Reserved.</p>
-        <p class="text-white text-1xl">Sameer | Ali | Sharjeel</p>
-    </footer>
+    @include('components.loader')
+   @include('components.footer')
 </body>
 <script>
     let API_BASE_URL = "http://127.0.0.1:8000/";
@@ -121,10 +112,12 @@
         showAlert("Submitted", "success");
     });
     document.getElementById("submitButton").addEventListener("click", async function() {
+                showLoader();
                 let fileInput = document.getElementById("timetableUpload");
                 let file = fileInput.files[0];
 
                 if (!file) {
+                    hideLoader();
                     showAlert("Please select a file before submitting.");
                     return;
                 }
@@ -144,16 +137,19 @@
 
                     let result = await response.json();
                     if (response.status === 200) {
-                           
+                           hideLoader();
                             renderTimetable(result);
                             showAlert(`Upload Successful!`, 'success');
                         }
                         else {
+                            hideLoader();
                             showAlert(`Upload Failed: Not Uploaded`);
                         }
                     } catch (error) {
+                        hideLoader();
                         showAlert("An error occurred while uploading.");
                     } finally {
+                        hideLoader();
                         submitButton.disabled = false;
                         submitButton.textContent = "Submit";
                     }

@@ -21,7 +21,6 @@
         function triggerFileInput() {
             document.getElementById('profileImageInput').click();
         }
-
     </script>
 </head>
 @php
@@ -85,12 +84,8 @@ $phoneNumber = session('phoneNumber', '');
             </form>
         </div>
     </div>
-
-    <footer class="bg-blue-600 p-2 mt-20 shadow-md text-center">
-        <h4 class="font-bold text-2xl mb-4 mt-4 text-white">Learning Management System</h4>
-        <p class="text-white text-1xl">&copy; 2025 LMS. All Rights Reserved.</p>
-        <p class="text-white text-1xl">Sameer | Ali | Sharjeel</p>
-    </footer>
+   @include('components.loader')
+   @include('components.footer')
 </body>
 <script>
     document.addEventListener("DOMContentLoaded", function() {
@@ -107,6 +102,7 @@ $phoneNumber = session('phoneNumber', '');
         API_BASE_URL = getApiBaseUrl();
         document.getElementById("updateProfileForm").addEventListener("submit", async function(event) {
             event.preventDefault();
+            showLoader();
             API_BASE_URL=await getApiBaseUrl();
             let formData = new FormData();
             let userId = "{{ session('userId') }}";
@@ -125,7 +121,6 @@ $phoneNumber = session('phoneNumber', '');
             if (imageInput.files.length > 0) {
                 formData.append("image", imageInput.files[0]);
             }
-            alert('okay till now');
             try {
                 let response = await fetch(`${API_BASE_URL}api/Insertion/update-single-user`, {
                     method: "POST"
@@ -138,13 +133,16 @@ $phoneNumber = session('phoneNumber', '');
                     sessionStorage.setItem("phoneNumber", result['phone']);
                     sessionStorage.setItem("designation", result['designation']);
                     sessionStorage.setItem("usernames", result['username']);
+                    hideLoader();
                     alert("✅ Profile updated successfully!");
 
                     location.reload();
                 } else {
+                    hideLoader();
                     alert("⚠️ Failed to update profile: " + result.message);
                 }
             } catch (error) {
+                hideLoader();
                 console.error("❌ Error updating profile:", error);
                 alert("⚠️ An unexpected error occurred. Please try again." + error);
             }
