@@ -17,9 +17,19 @@
                 fetchCourseAllocationForTeacher(teacherId);
             }
         });
-
-        function fetchCourseAllocationForTeacher(id) {
-            const apiUrl = `http://127.0.0.1:8000/api/Teachers/your-courses?teacher_id=${id}`;
+        let API_BASE_URL = "http://127.0.0.1:8000/";
+    async function getApiBaseUrl() {
+        try {
+            let response = await fetch('/get-api-url');
+            let data = await response.json();
+            return data.api_base_url;
+        } catch (error) {
+            return API_BASE_URL;
+        }
+    }
+       async function fetchCourseAllocationForTeacher(id) {
+            API_BASE_URL=await getApiBaseUrl();
+            const apiUrl = `${API_BASE_URL}api/Teachers/your-courses?teacher_id=${id}`;
 
             fetch(apiUrl)
                 .then(response => response.json())
@@ -80,8 +90,9 @@
             });
         }
 
-        function fetchCourseAllocation(jl_id) {
-            fetch(`http://127.0.0.1:8000/api/JuniorLec/your-courses?jl_id=${jl_id}`)
+        async function fetchCourseAllocation(jl_id) {
+            API_BASE_URL=await getApiBaseUrl();
+            fetch(`${API_BASE_URL}api/JuniorLec/your-courses?jl_id=${jl_id}`)
                 .then(response => response.json())
                 .then(data => {
                     if (data.status === "success") {

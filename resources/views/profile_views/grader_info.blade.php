@@ -41,19 +41,33 @@
     </div>
 
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            const studentId = "{{ $student_id }}";
-
-            if (!studentId) {
-                alert("Invalid Student ID!");
-                return;
+        let API_BASE_URL = "http://127.0.0.1:8000/";
+        async function getApiBaseUrl() {
+            try {
+                let response = await fetch('/get-api-url');
+                let data = await response.json();
+                return data.api_base_url;
+            } catch (error) {
+                return API_BASE_URL;
             }
+        }
+        async function initializeApiBaseUrl() {
+            API_BASE_URL = await getApiBaseUrl();
+        }
+        document.addEventListener("DOMContentLoaded",
+            function() {
+                const studentId = "{{ $student_id }}";
 
-            fetch(`http://127.0.0.1:8000/api/Grader/GraderInfo?student_id=${studentId}`)
-                .then(response => response.json())
-                .then(data => displayGraderHistory(data))
-                .catch(error => console.error("Error fetching data:", error));
-        });
+                if (!studentId) {
+                    alert("Invalid Student ID!");
+                    return;
+                }
+                initializeApiBaseUrl();
+                fetch(`${API_BASE_URL}api/Grader/GraderInfo?student_id=${studentId}`)
+                    .then(response => response.json())
+                    .then(data => displayGraderHistory(data))
+                    .catch(error => console.error("Error fetching data:", error));
+            });
 
         function displayGraderHistory(response) {
             if (!response.data || response.data.length === 0) {

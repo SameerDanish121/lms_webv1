@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 use App\Services\ApiConfig;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Session;
 class AuthController extends Controller
@@ -15,6 +16,7 @@ class AuthController extends Controller
     }
     public function login()
     {
+        // session()->flush();
         return view('login');
     }
     public function handleLogin(Request $request)
@@ -29,7 +31,6 @@ class AuthController extends Controller
         ]);
         $data = $response->json();
         if ($response->successful() && isset($data['Type'])) {
-
             if ($data['Type'] == 'Admin') {
                 session([
                     'userType' => 'Admin',
@@ -48,8 +49,8 @@ class AuthController extends Controller
                     'faculty_count' => $data['AdminInfo']['faculty_count'],
                     'offer_count' => $data['AdminInfo']['offered_course_count'],
                 ]);
-                return redirect()->route('admin.dashboard')->with('userData', $data);
-            } elseif ($data['Type'] == 'Datacell') {
+                return redirect()->route('otp.form');
+            } else if ($data['Type'] == 'Datacell') {
                 session([
                     'userType' => 'Datacell',
                     'userId' => $data['DatacellInfo']['user_id'],
@@ -68,14 +69,54 @@ class AuthController extends Controller
                     'offer_count' => $data['DatacellInfo']['offered_course_count'],
                 
                 ]);
-                return redirect()->route('datacell.dashboard')->with('userData', $data);
+                return redirect()->route('otp.form');
+            }else if ($data['Type'] == 'HOD') {
+                session([
+                    'userType' => 'HOD',
+                    'userId' => $data['HODInfo']['user_id'],
+                    'Id' => $data['HODInfo']['id'],
+                    'username' => $data['HODInfo']['name'],
+                    'designation' => $data['HODInfo']['Designation'],
+                    'department' => $data['HODInfo']['Department'],
+                    'usernames' => $data['HODInfo']['Username'],
+                    'currentSession' => $data['HODInfo']['Current Session'],
+                    'startDate' => $data['HODInfo']['Start Date'],
+                    'endDate' => $data['HODInfo']['End Date'],
+                    'profileImage' => $data['HODInfo']['image'] ?? asset('images/male.png'),
+                    'course_count' => $data['HODInfo']['course_count'],
+                    'student_count' => $data['HODInfo']['student_count'],
+                    'faculty_count' => $data['HODInfo']['faculty_count'],
+                    'offer_count' => $data['HODInfo']['offered_course_count'],
+                
+                ]);
+                return redirect()->route('otp.form');
+            }else if ($data['Type'] == 'Director') {
+                session([
+                    'userType' => 'Director',
+                    'userId' => $data['DirectorInfo']['user_id'],
+                    'Id' => $data['DirectorInfo']['id'],
+                    'username' => $data['DirectorInfo']['name'],
+                    'designation' => $data['DirectorInfo']['Designation'],
+                    'usernames' => $data['DirectorInfo']['Username'],
+                    'currentSession' => $data['DirectorInfo']['Current Session'],
+                    'startDate' => $data['DirectorInfo']['Start Date'],
+                    'endDate' => $data['DirectorInfo']['End Date'],
+                    'profileImage' => $data['DirectorInfo']['image'] ?? asset('images/male.png'),
+                    'course_count' => $data['DirectorInfo']['course_count'],
+                    'student_count' => $data['DirectorInfo']['student_count'],
+                    'faculty_count' => $data['DirectorInfo']['faculty_count'],
+                    'offer_count' => $data['DirectorInfo']['offered_course_count'],
+                
+                ]);
+                return redirect()->route('otp.form');
             } else {
-                Session::put('error', 'Unauthorized role.');
-                return back()->withErrors(['error' => 'Unauthorized role.']);
+                // Session::put('error', 'Unauthorized role.');
+                // return back()->withErrors(['error' => 'Unauthorized role.']);
+                return redirect()->route('caught.it');
             }
+
         }
-        Session::put('error', 'Unauthorized role.');
-        return back()->withErrors(['error' => 'Invalid credentials.']);
+        return redirect()->route('caught.it');
     }
     public function AllStudent(Request $request)
     {
@@ -190,5 +231,47 @@ class AuthController extends Controller
 
         return back()->withErrors(['error' => $data['message'] ?? 'Failed to update profile.']);
     }
+    public function showOTPForm()
+    {
+        // Assuming session has 'username'
+        return view('Login_verification');
+    }
 
+    public function verifyOTP(Request $request)
+    {
+        $request->validate([
+            'otp' => 'required'
+        ]);
+        $userId = session('userId');
+        $userType=session('userType');
+       
+        try {
+            $apiResponse = Http::post($this->baseUrl .'api/verify/login', [
+                'user_id' => $userId,
+                'otp'     => $request->otp
+            ]);
+
+            $responseData = $apiResponse->json();
+    
+            if ($apiResponse->successful() && $responseData['status'] === 'success') {
+                if ($userType == 'Director') {
+                    return redirect()->route('director.dashboard');
+                } elseif ($userType == 'Admin') {
+                    return redirect()->route('admin.dashboard');
+                } elseif ($userType == 'Datacell') {
+                    return redirect()->route('datacell.dashboard');
+                } elseif ($userType == 'HOD') {
+                    return redirect()->route('hod.dashboard');
+                } else {
+                    return redirect()->route('login')->with('error', 'User role undefined.');
+                }
+            } else {
+                Session::put('error',$responseData['message'] ?? 'Invalid OTP. Please try again.');
+                return back();
+            }
+        } catch (\Exception $e) {
+            Session::put('error',$e->getMessage());
+            return back();
+        }
+    }
 }

@@ -1437,7 +1437,13 @@ class="mx-auto rounded-full border-4 border-white shadow-lg w-24 h-24 object-cov
         </div>
     </section>
     </div>
-
+    <div class="bg-white shadow-lg rounded-lg p-6 text-center">
+        <h2 class="text-xl font-semibold text-gray-800">View All Course Allocation in Session</h2>
+        <p class="text-gray-600 mt-2">Click below to View List Of Course Allocation</p>
+        <a href="{{route('all.course_allocation')}}" class="mt-4 inline-block bg-purple-500 text-white px-6 py-3 rounded-lg shadow-md hover:bg-purple-600 transition">
+            Click Me ➡️
+        </a>
+    </div>
 
     <footer class="bg-blue-600 p-2 mt-20 shadow-md text-center">
         <h4 class="font-bold text-2xl mb-4 mt-4 text-white">Learning Management System</h4>

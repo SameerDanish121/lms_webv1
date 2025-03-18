@@ -83,12 +83,6 @@
         <div class="mb-6 w-full">
             <input type="password" id="password" name="password" placeholder="Enter Your Password" class="input-field w-full p-2 rounded-lg border text-black focus:outline-none transition-all duration-300" required>
         </div>
-        @if(session('error'))
-        <div id="error-alert" class="bg-red-600 text-white p-4 rounded-md w-full text-center mb-4 animate-bounce">
-            {{ session('error') }}
-
-        </div>
-        @endif
         <button type="submit" class="btn-animate w-80 flex justify-center items-center bg-[#024CAA] text-white font-semibold p-3 mt-5 rounded-lg">
             Login
         </button>

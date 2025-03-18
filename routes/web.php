@@ -10,6 +10,11 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::get('/forgot-password', function () {return view('forgot_password');})->name('forgot');
 Route::get('/datacell/dashboard', function () {$userData = session('userData');if (!empty($userData['user_id'])) {session(['user_id' => $userData['user_id']]);}return view('datacell_Home', compact('userData'));})->name('datacell.dashboard');
 Route::get('/admin/dashboard', function () {$userData = session('userData'); if (!empty($userData['user_id'])) {session(['user_id' => $userData['user_id']]);}return view('Admin_Home', compact('userData'));})->name('admin.dashboard');
+Route::get('/hod/dashboard', function () {return view('hod_dashboard');})->name('hod.dashboard');
+Route::get('/director/dashboard', function () {return view('director_dashboard');})->name('director.dashboard');
+Route::get('/OOps', function () {return view('un_authorized');})->name('caught.it');
+Route::get('/verify-otp-show', [AuthController::class, 'showOTPForm'])->name('otp.form');
+Route::post('/verify-otp-ver', [AuthController::class, 'verifyOTP'])->name('verify.otp');
 //--------------------------------------------------------ADMIN-DATACELL(DASHBOARD PROFILE HANDLING)----------------------------------------
 Route::get('/profile', function () {return view('components.profile');})->name('profile');
 Route::get('/profile/edit', function () {return view('components.edit_profile');})->name('profile.edit');
